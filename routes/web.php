@@ -15,11 +15,11 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::get('/', function () {
-    return view('welcome');
+    return view('index');
 });
 
-Route::get('/dashboard', function () {
-    return view('dashboard');
+Route::get('/logged-in', function () {
+    return view('index');
 })->middleware(['auth', 'verified'])->name('dashboard');
 
 Route::middleware('auth')->group(function () {
@@ -30,15 +30,19 @@ Route::middleware('auth')->group(function () {
 
 require __DIR__.'/auth.php';
 
-Route::get('index', function(){
+Route::get('/index', function(){
     return view('index');
 })->name('index');
-Route::get('event', function(){
+Route::get('/event', function(){
     return view('event');
 })->name('event');
-Route::get('contact', function(){
+Route::get('/contact', function(){
     return view('contact');
 })->name('contact');
-Route::get('about', function(){
+Route::get('/about', function(){
     return view('about');
 })->name('about');
+
+Route::get('/test', function(){ // test logged in
+    echo 'test';
+})->middleware(['auth', 'verified']);

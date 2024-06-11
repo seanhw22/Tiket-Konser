@@ -15,11 +15,6 @@
                         </li>
                     </ul>
                 </div>
-                <div class="profile-picture">
-                    <a href="log.html">
-                        <img src="assets/images/pngwing.com (4).png" alt="Profile Picture">
-                    </a>
-                </div>
             </div>
         </nav>
     </header>
