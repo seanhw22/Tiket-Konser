@@ -13,7 +13,7 @@ class Seat extends Model
     protected $fillable = [
         'event_id',
         'buyer_id',
-        'seat_class',
+        'seat_class_id',
         'seat_position_row',
         'seat_position_column',
         'available',

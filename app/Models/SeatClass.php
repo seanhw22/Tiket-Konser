@@ -14,4 +14,6 @@ class SeatClass extends Model
         'seat_class',
         'price',
     ];
+
+    protected $table = 'seatclass';
 }

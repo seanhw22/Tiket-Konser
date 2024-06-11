@@ -14,12 +14,13 @@ class Event extends Model
         'event_desc',
         'total_seat_rows',
         'total_seat_columns',
-        'seatmap',
     ];
 
     protected $casts = [
         'created_at' => 'datetime',
     ];
+
+    protected $table = 'event';
 
     public function seats()
     {
