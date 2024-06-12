@@ -29,7 +29,8 @@
                         <button type="button" onclick="addSeatClass()">Add Seat Class</button>
                     </div>
                 </div>
-                <button type="submit" class="btn btn-primary">Submit</but> 
+                <button type="submit" class="btn btn-primary">Submit</button>
+                <a href="{{ route('eventlist') }}" class="btn btn-primary">Back</a> 
             </form>
         </div>
     </section>

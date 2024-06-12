@@ -36,6 +36,7 @@ Route::middleware('auth')->group(function () {
     Route::post('/event-list/store', [EventController::class, 'store'])->name('eventlist.store');
     Route::put('/event-list/update/{id}', [EventController::class, 'update'])->name('eventlist.update');
     Route::delete('/event-list/destroy/{id}', [EventController::class, 'destroy'])->name('eventlist.destroy');
+    Route::put('/event-list/deploy/{id}', [EventController::class, 'deploy'])->name('eventlist.deploy');
 });
 
 require __DIR__.'/auth.php';

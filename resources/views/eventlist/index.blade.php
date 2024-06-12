@@ -35,8 +35,15 @@
                                 <form action="{{ route('eventlist.destroy', $e->id) }}" method="POST" class="d-inline">
                                     @method('delete')
                                     @csrf
-                                    <button type="submit" class="btn btn-danger">Delete</button>
+                                    <button type="submit" class="btn btn-danger" onclick="return confirm('Are you sure you wish to delete this?');">Delete</button>
                                 </form>
+                                @if (!$e->deployed)
+                                <form action="{{ route('eventlist.deploy', $e->id) }}" method="POST" class="d-inline">
+                                    @csrf
+                                    @method('PUT')
+                                    <button type="submit" class="btn btn-success" onclick="return confirm('Are you sure you wish to deploy this? You cannot undo this action.');">Deploy</button>
+                                </form>
+                                @endif
                             </td>
                         </tr>
                     @endforeach

@@ -92,4 +92,13 @@ class EventController extends Controller
         return redirect()->route('eventlist')
             ->with('success','Event deleted successfully');
     }
+
+    public function deploy($id){
+        $event = Event::find($id);
+        $event->deployed = true;
+        $event->save();
+
+        return redirect()->route('eventlist')
+            ->with('success','Event deployed successfully');
+    }
 }
