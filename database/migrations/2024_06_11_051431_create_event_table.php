@@ -18,6 +18,7 @@ return new class extends Migration
             $table->string('event_desc');
             $table->integer('total_seat_rows');
             $table->integer('total_seat_columns');
+            $table->boolean('deployed')->default(false);
         });
     }
 

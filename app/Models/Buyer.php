@@ -18,4 +18,6 @@ class Buyer extends Model
     protected $casts = [
         'created_at' => 'datetime',
     ];
+
+    protected $table = 'buyer';
 }

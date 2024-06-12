@@ -14,6 +14,7 @@ class Event extends Model
         'event_desc',
         'total_seat_rows',
         'total_seat_columns',
+        'deployed',
     ];
 
     protected $casts = [

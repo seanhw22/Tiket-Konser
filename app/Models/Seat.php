@@ -18,17 +18,18 @@ class Seat extends Model
         'seat_position_column',
         'available',
     ];
-
+    protected $table = 'seat';
+    
     public function event()
     {
         return $this->belongsTo(Event::class);
     }
     
     public static function rules(Event $event)
-{
-    return [
-        'seat_position_row' => 'nullable|integer|max:' . $event->total_seat_rows,
-        'seat_position_column' => 'nullable|integer|max:' . $event->total_seat_columns,
-    ];
-}
+        {
+            return [
+            'seat_position_row' => 'nullable|integer|max:' . $event->total_seat_rows,
+            'seat_position_column' => 'nullable|integer|max:' . $event->total_seat_columns,
+        ];
+    }   
 }

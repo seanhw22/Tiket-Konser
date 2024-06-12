@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Event;
 use App\Http\Controllers\SeatClassController;
 use App\Http\Controllers\SeatController;
+use App\Models\SeatClass;
 use Illuminate\Http\Request;
 
 class EventController extends Controller
@@ -46,14 +47,22 @@ class EventController extends Controller
     }
     public function edit($id){
         $event = Event::find($id);
-        return view('eventlist.edit', compact('event'));
+        $seatClassController = new SeatClassController();
+        $seatclass = $seatClassController->retrieve($id);
+        $seatclassstring = json_encode($seatclass);
+
+        return view('eventlist.edit', compact('event', 'seatclass', 'seatclassstring'));
     }
     public function update(Request $request, $id){
         $request->validate([
-            'event_name => required',
-            'event_desc => required',
-            'total_seat_rows => required',
-            'total_seat_columns => required',
+            'event_name' => 'required',
+            'event_desc' => 'required',
+            'total_seat_rows' => 'required',
+            'total_seat_columns' => 'required',
+            'seatclass' => 'required|array',
+            'seatclass.*.id' => 'required',
+            'seatclass.*.seat_class' => 'required',
+            'seatclass.*.price' => 'required',
         ]);
 
         $update = [
@@ -64,12 +73,21 @@ class EventController extends Controller
         ];
 
         Event::whereId($id)->update($update);
+
+        $seatClassController = new SeatClassController();
+        $seatClassController->update($request, $id);
+
         return redirect()->route('eventlist')
             ->with('success','Event updated successfully');
     }
 
     public function destroy($id){
         $event = Event::find($id);
+        $seatClassController = new SeatClassController();
+        $seatClasses = $seatClassController->retrieve($id);
+        foreach ($seatClasses as $seatClass) {
+            $seatClassController->destroy($seatClass['id']);
+        }
         $event->delete();
         return redirect()->route('eventlist')
             ->with('success','Event deleted successfully');

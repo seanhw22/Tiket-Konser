@@ -6,19 +6,19 @@
             <form action="{{ route('eventlist.store') }}" method="POST"> 
                 @csrf
                 <div class="mb-3">
-                    <label for="event_name" class="form-label">event_name</label>
+                    <label for="event_name" class="form-label">Event Name</label>
                     <input type="text" class="form-control" id="event_name" name="event_name"> 
                 </div>
                 <div class="mb-3">
-                    <label for="event_desc" class="form-label">event_desc</label>
+                    <label for="event_desc" class="form-label">Event Description</label>
                     <input type="text" class="form-control" id="event_desc" name="event_desc"> 
                 </div>
                 <div class="mb-3">
-                    <label for="total_seat_rows" class="form-label">total_seat_rows</label>
+                    <label for="total_seat_rows" class="form-label">Total Seat Rows</label>
                     <input type="text" class="form-control" id="total_seat_rows" name="total_seat_rows">
                 </div>
                 <div class="mb-3">
-                    <label for="total_seat_columns" class="form-label">total_seat_columns</label>
+                    <label for="total_seat_columns" class="form-label">Total Seat Columns</label>
                     <input type="text" class="form-control" id="total_seat_columns" name="total_seat_columns">
                 </div>
                 <div>
@@ -49,6 +49,7 @@
 
         function removeSeatClass(button) {
             button.parentElement.remove();
+            index--;
         }
     </script>
 @endsection
