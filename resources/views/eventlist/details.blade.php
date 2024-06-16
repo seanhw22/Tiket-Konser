@@ -18,15 +18,22 @@
         @endforeach
         <br>
         <h2>Seats</h2>
-        @foreach ($seats as $seat)
-            @foreach($seatClasses as $seatClass)
-                @if($seat['seat_class_id'] === $seatClass['id'])
-                    <div class="seat" style="background-color: {{ $seatClass['color_code'] }}"></div>
-                    @if ($seat['seat_position_column'] === $event->total_seat_columns)
-                        <br>
-                    @endif
-                @endif
-            @endforeach
-        @endforeach
+        @for ($row = 1; $row <= $total_seat_rows; $row++)
+                @for ($column = 1; $column <= $event->total_seat_columns; $column++)
+                    @foreach ($seats as $seat)
+                        @if ($seat['seat_position_row'] === $row && $seat['seat_position_column'] === $column)
+                            @foreach($seatClasses as $seatClass)
+                                @if($seat['seat_class_id'] === $seatClass['id'])
+                                    <div class="seat @if(!$seat['available']) dimmed @endif" style="background-color: {{ $seatClass['color_code'] }}"></div>
+                                    @if ($seat['seat_position_column'] === $event->total_seat_columns)
+                                        <br>
+                                    @endif
+                                @endif
+                            @endforeach
+                        @endif
+                    @endforeach
+                @endfor
+            </div>
+        @endfor
     </section>
 @endsection

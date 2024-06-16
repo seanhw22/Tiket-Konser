@@ -21,7 +21,7 @@
 <script>
     const footer = document.getElementById('footer');
 
-    window.addEventListener('DOMContentLoaded', function() {
+    window.addEventListener('load', function() {
         var scrollTop = window.pageYOffset || document.documentElement.scrollTop;
         var documentHeight = document.documentElement.offsetHeight;
         var windowHeight = window.innerHeight || document.documentElement.clientHeight;
