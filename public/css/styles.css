@@ -196,4 +196,9 @@ p {
   padding-top: 100px; /* Adjust the padding to make space for the text */
 }
 
-
+.seat {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  display: inline-block;
+}

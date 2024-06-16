@@ -15,10 +15,10 @@ return new class extends Migration
             $table->id();
             $table->timestamps();
             $table->string('event_name');
-            $table->string('event_desc');
-            $table->integer('total_seat_rows');
+            $table->longtext('event_desc');
             $table->integer('total_seat_columns');
             $table->boolean('deployed')->default(false);
+            $table->dateTime('end_date');
         });
     }
 

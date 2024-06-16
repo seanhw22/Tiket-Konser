@@ -12,9 +12,9 @@ class Event extends Model
     protected $fillable = [
         'event_name',
         'event_desc',
-        'total_seat_rows',
         'total_seat_columns',
         'deployed',
+        'end_date',
     ];
 
     protected $casts = [

@@ -1,4 +1,4 @@
-<footer class="footer">
+<footer id="footer" class="footer">
     <div class="container">
         <div class="row">
             <div class="col-md-6">
@@ -17,3 +17,20 @@
         </div>
     </div>
 </footer>
+
+<script>
+    const footer = document.getElementById('footer');
+
+    window.addEventListener('DOMContentLoaded', function() {
+        var scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+        var documentHeight = document.documentElement.offsetHeight;
+        var windowHeight = window.innerHeight || document.documentElement.clientHeight;
+        var isScrollable = (documentHeight - scrollTop) > windowHeight;
+
+        if (isScrollable) {
+            footer.classList.remove('fixed-bottom');
+        } else {
+            footer.classList.add('fixed-bottom');
+        }
+    });
+</script>

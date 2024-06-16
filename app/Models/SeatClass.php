@@ -13,7 +13,13 @@ class SeatClass extends Model
         'event_id',
         'seat_class',
         'price',
+        'total_seat_rows',
+        'color_code',
     ];
+
+    public function event(){
+        return $this->belongsTo(Event::class);
+    }
 
     protected $table = 'seatclass';
 }

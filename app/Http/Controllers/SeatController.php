@@ -8,23 +8,22 @@ use Illuminate\Http\Request;
 
 class SeatController extends Controller
 {
-    public function store(Request $request){
-        $request->validate([
-            "event_id"=> "required",
-            "buyer_id"=> "required",
-            "seat_class_id"=> "required",
-            "seat_position_row"=> "required",
-            "seat_position_column"=> "required",
-            "available"=> "required",
+    public function store($event_id, $seat_class_id, $seat_position_row, $seat_position_column){
+        $class = Seat::create([
+            "event_id" => $event_id,
+            "seat_class_id" => $seat_class_id,
+            "seat_position_row" => $seat_position_row,
+            "seat_position_column" => $seat_position_column,
         ]);
+    }
 
-        $seat = Seat::create([
-            "event_id"=> $request->event_id,
-            "buyer_id"=> $request->buyer_id,
-            "seat_class_id"=> $request->seat_class_id,
-            "seat_position_row"=> $request->seat_position_row,
-            "seat_position_column"=> $request->seat_position_column,
-            "available"=> $request->available,
-        ]);
+    public function retrieve($event_id){
+        $seats = Seat::where('event_id', $event_id)->get();
+        $seatsArray = $seats->toArray();
+        return $seatsArray;
+    }
+
+    public function destroyAll($event_id){
+        Seat::where('event_id', $event_id)->delete();
     }
 }

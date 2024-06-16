@@ -13,6 +13,8 @@ class SeatClassController extends Controller
                 "event_id" => $event_id,
                 "seat_class" => $seatClassData['seat_class'],
                 "price" => $seatClassData['price'],
+                "total_seat_rows" => $seatClassData['total_seat_rows'],
+                "color_code" => $seatClassData['color_code'],
             ]);
         }
     }
@@ -22,6 +24,8 @@ class SeatClassController extends Controller
             "event_id" => $event_id,
             "seat_class" => $seatClassData['seat_class'],
             "price" => $seatClassData['price'],
+            "total_seat_rows" => $seatClassData['total_seat_rows'],
+            "color_code" => $seatClassData['color_code'],
         ]);
     }
 
@@ -49,6 +53,8 @@ class SeatClassController extends Controller
                 $update = [
                     "seat_class" => $seatClassData['seat_class'],
                     "price" => $seatClassData['price'],
+                    "total_seat_rows" => $seatClassData['total_seat_rows'],
+                    "color_code" => $seatClassData['color_code'],
                 ];
                 SeatClass::whereId($id)->update($update);
             }

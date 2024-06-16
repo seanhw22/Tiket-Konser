@@ -17,6 +17,8 @@ return new class extends Migration
             $table->unsignedBigInteger('event_id');
             $table->string('seat_class');
             $table->integer('price');
+            $table->integer('total_seat_rows');
+            $table->string('color_code');
             $table->foreign('event_id')->references('id')->on('event')->onDelete('cascade');
         });
     }
