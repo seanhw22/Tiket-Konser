@@ -1,7 +1,7 @@
 <header>
         <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
             <div class="container">
-                <a class="navbar-brand" href="index.html">ConcertTickets</a>
+                <a class="navbar-brand" href="{{route('index')}}">ConcertTickets</a>
                 <div class="collapse navbar-collapse" id="navbarNav">
                     <ul class="navbar-nav mx-auto">
                         <li class="nav-item">

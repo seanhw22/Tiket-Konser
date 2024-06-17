@@ -7,6 +7,7 @@ use App\Http\Controllers\SeatClassController;
 use App\Http\Controllers\SeatController;
 use Illuminate\Http\Request;
 use DateTime;
+use Carbon\Carbon;
 
 class EventController extends Controller
 {
@@ -172,7 +173,8 @@ class EventController extends Controller
     }
 
     public function retrieveDeployed(){
-        $event = Event::where('deployed', true)->orderBy('end_date')->get();
+        $currentDate = Carbon::now();
+        $event = Event::where('deployed', true)->where('end_date', '>=', $currentDate)->orderBy('end_date')->get();
         return ($event);
     }
 
@@ -209,8 +211,27 @@ class EventController extends Controller
             return redirect()->route('event')
                 ->with('error',"Event isn't live.");
         }
+        if(!$seat->available){
+            return redirect()->route('event.seat', [$eventId, $seatId])
+                ->with('error',"Seat isn't available.");
+        }
         $rowString = EventController::numberToLetter($seat->seat_position_row);
         return view('buy-tickets', compact('seat', 'seatClass', 'event', 'rowString'));
+    }
+
+    public function buyTicket(Request $request){
+
+        $seatController = new SeatController();
+        $buyerController = new BuyerController();
+        
+        $buyerController->store($request);
+        $seatController->updateAvailability($request->seat_id);
+
+        return redirect()->route('event.confirmed', [$request->event_id, $request->seat_id]);
+    }
+
+    public function showConfirmed(){
+        return view('confirmed');
     }
 
     function numberToLetter($number) {

@@ -51,6 +51,8 @@ Route::get('/index', function(){
 Route::get('/event', [EventController::class, 'indexDeployed'])->name('event');
 Route::get('/event/{id}', [EventController::class, 'showDetailsDeployed'])->name('event.showdeployed');
 Route::get('/event/{id}/seat/{seat_id}', [EventController::class, 'seatDetailsDeployed'])->name('event.seatdetails');
+Route::post('/event/{id}/seat/{seat_id}/buy', [EventController::class, 'buyTicket'])->name('event.buy');
+Route::get('/event/{event_id}/seat/{seat_id}/confirmed', [EventController::class, 'showConfirmed'])->name('event.confirmed');
 
 Route::get('/contact', function(){
     return view('contact');

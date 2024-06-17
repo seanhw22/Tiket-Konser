@@ -35,7 +35,7 @@ PSUT ConcertTickets
                         @foreach ($event as $e)
                             <div class="col mb-5">
                                 <div class="card h-100">
-                                    <img class="card-img-top" src="assets/images/pngwing.com (6).png" alt="{{$e->event_name}}">
+                                    <img class="card-img-top" src="{{$e->event_image}}" alt="{{$e->event_name}}">
                                     <!-- <img class="card-img-top" src="$e->event_image" alt="{{$e->event_name}}"> -->
                                     <div class="card-footer p-4 pt-0 border-top-0 bg-transparent">
                                         <div class="text-center">

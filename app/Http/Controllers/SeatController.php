@@ -28,6 +28,12 @@ class SeatController extends Controller
         return $seat;
     }
 
+    public function updateAvailability($seat_id){
+        $seat = Seat::find($seat_id);
+        $seat->available = !$seat->available;
+        $seat->save();
+    }
+
     public function destroyAllInEvent($event_id){
         Seat::where('event_id', $event_id)->delete();
     }
