@@ -20,7 +20,6 @@ return new class extends Migration
             $table->integer('seat_position_row');
             $table->integer('seat_position_column');
             $table->boolean('available')->default(true);
-
             $table->foreign('event_id')->references('id')->on('event')->onDelete('cascade');
             $table->foreign('buyer_id')->references('id')->on('buyer')->onDelete('cascade');
             $table->foreign('seat_class_id')->references('id')->on('seatclass')->onDelete('cascade');

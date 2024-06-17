@@ -12,6 +12,8 @@ class Event extends Model
     protected $fillable = [
         'event_name',
         'event_desc',
+        'event_image',
+        'event_date',
         'total_seat_columns',
         'deployed',
         'end_date',

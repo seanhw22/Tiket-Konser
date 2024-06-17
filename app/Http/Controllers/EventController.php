@@ -5,8 +5,8 @@ namespace App\Http\Controllers;
 use App\Models\Event;
 use App\Http\Controllers\SeatClassController;
 use App\Http\Controllers\SeatController;
-use App\Models\SeatClass;
 use Illuminate\Http\Request;
+use DateTime;
 
 class EventController extends Controller
 {
@@ -20,10 +20,13 @@ class EventController extends Controller
     {
         return view("eventlist.create");
     }
+    
     public function store(Request $request){
         $request->validate([
             'event_name' => 'required',
             'event_desc' => 'required',
+            'event_image' => 'required',
+            'event_date' => 'required',
             'total_seat_columns' => 'required',
             'end_date' => 'required',
             'seatclass' => 'required|array',
@@ -36,6 +39,8 @@ class EventController extends Controller
         $event = Event::create([
             "event_name"=> $request->event_name,
             "event_desc"=> $request->event_desc,
+            "event_image"=> $request->event_image,
+            "event_date"=> $request->event_date,
             "end_date"=> $request->end_date,
             "total_seat_columns"=> $request->total_seat_columns,
         ]);
@@ -44,10 +49,10 @@ class EventController extends Controller
 
         $seatClassController = new SeatClassController();
         $seatClassController->store($request, $event_id);
-        EventController::createSeats($event_id);
         return redirect()->route('eventlist')
-            ->with('success','Event created successfully');
+            ->with('success',"Event created successfully, don't forget to create seats before deploying and after editing.");
     }
+
     public function edit($id){
         $event = Event::find($id);
         $seatClassController = new SeatClassController();
@@ -61,26 +66,12 @@ class EventController extends Controller
         return view('eventlist.edit', compact('event', 'seatclass', 'seatclassstring'));
     }
 
-    
-    public function showDetails($id){
-        $event = Event::find($id);
-        $seatClassController = new SeatClassController();
-        $seatController = new SeatController();
-        $seatClasses = $seatClassController->retrieve($id);
-        $seatClassLength = count($seatClasses);
-        $seats = $seatController->retrieve($id);
-        $total_seat_rows = 0;
-        foreach ($seatClasses as $seatClass) {
-            $total_seat_rows += $seatClass['total_seat_rows'];
-        }
-
-        return view('eventlist.details', compact('event', 'seatClasses', 'seatClassLength', 'seats', 'total_seat_rows'));
-        
-    }
     public function update(Request $request, $id){
         $request->validate([
             'event_name' => 'required',
             'event_desc' => 'required',
+            'event_image' => 'required',
+            'event_date' => 'required',
             'total_seat_columns' => 'required',
             'end_date' => 'required',
             'seatclass' => 'required|array',
@@ -94,6 +85,8 @@ class EventController extends Controller
         $update = [
             'event_name'=> $request->event_name,
             'event_desc'=> $request->event_desc,
+            'event_image'=> $request->event_image,
+            'event_date'=> $request->event_date,
             'total_seat_columns'=> $request->total_seat_columns,
             'end_date'=> $request->end_date
         ];
@@ -104,7 +97,7 @@ class EventController extends Controller
         $seatClassController->update($request, $id);
         EventController::createSeats($id);
         return redirect()->route('eventlist')
-            ->with('success','Event updated successfully');
+            ->with('success',"Event updated successfully, don't forget to create seats before deploying and after editing.");
     }
 
     public function destroy($id){
@@ -119,19 +112,10 @@ class EventController extends Controller
             ->with('success','Event deleted successfully');
     }
 
-    public function deploy($id){
-        $event = Event::find($id);
-        $event->deployed = true;
-        $event->save();
-
-        return redirect()->route('eventlist')
-            ->with('success','Event deployed successfully');
-    }
-
     public function createSeats($id){
         $seatClassController = new SeatClassController();
         $seatController = new SeatController();
-        $seatController->destroyAll($id);
+        $seatController->destroyAllInEvent($id);
         $seatClasses = $seatClassController->retrieve($id);
         $event = Event::find($id)->toArray();
         $totalRows = 0;
@@ -146,5 +130,116 @@ class EventController extends Controller
         }
         return redirect()->route('eventlist')
             ->with('success','Seats created successfully');
+    }
+
+    public function showDetails($id){
+        $event = Event::find($id);
+        $seatClassController = new SeatClassController();
+        $seatController = new SeatController();
+        $seatClasses = $seatClassController->retrieve($id);
+        $seats = $seatController->retrieve($id);
+        $total_seat_rows = 0;
+        foreach ($seatClasses as $seatClass) {
+            $total_seat_rows += $seatClass['total_seat_rows'];
+        }
+
+        return view('eventlist.details', compact('event', 'seatClasses', 'seats', 'total_seat_rows'));
+    }
+
+    public function deploy($id){
+        $seatController = new SeatController();
+        $event = Event::find($id);
+        $seats = $seatController->retrieve($id);
+        if (empty($seats)){
+            return redirect()->route('eventlist')
+                ->with('failure', 'Cannot deploy an event that has no seats.');
+        }
+        $event->deployed = true;
+        $event->save();
+
+        return redirect()->route('eventlist')
+            ->with('success','Event deployed successfully');
+    }
+
+    public function seatDetails($eventId, $seatId){
+        $seatController = new SeatController();
+        $seatClassController = new SeatClassController();
+        $seat = $seatController->retrieveOne($seatId);
+        $seatClass = $seatClassController->retrieveOne($seat->seat_class_id);
+        $event = Event::find($eventId);
+        $rowString = EventController::numberToLetter($seat->seat_position_row);
+        return view('eventlist.seat', compact('seat', 'seatClass', 'event', 'rowString'));
+    }
+
+    public function retrieveDeployed(){
+        $event = Event::where('deployed', true)->orderBy('end_date')->get();
+        return ($event);
+    }
+
+    public function indexDeployed(){
+        $event = EventController::retrieveDeployed();
+        return view('event', compact('event'));
+    }
+
+    public function showDetailsDeployed($id){
+        $event = Event::find($id);
+        if(!$event->deployed){
+            return redirect()->route('event')
+                ->with('error',"Event isn't live.");
+        }
+        $seatClassController = new SeatClassController();
+        $seatController = new SeatController();
+        $seatClasses = $seatClassController->retrieve($id);
+        $seats = $seatController->retrieve($id);
+        $total_seat_rows = 0;
+        $dateTimeString = EventController::convertDateTimeToLocalFormat($event->end_date);
+        foreach ($seatClasses as $seatClass) {
+            $total_seat_rows += $seatClass['total_seat_rows'];
+        }
+        return view('details', compact('event', 'seatClasses', 'seats', 'total_seat_rows', 'dateTimeString'));
+    }
+
+    public function seatDetailsDeployed($eventId, $seatId){
+        $seatController = new SeatController();
+        $seatClassController = new SeatClassController();
+        $seat = $seatController->retrieveOne($seatId);
+        $seatClass = $seatClassController->retrieveOne($seat->seat_class_id);
+        $event = Event::find($eventId);
+        if(!$event->deployed){
+            return redirect()->route('event')
+                ->with('error',"Event isn't live.");
+        }
+        $rowString = EventController::numberToLetter($seat->seat_position_row);
+        return view('buy-tickets', compact('seat', 'seatClass', 'event', 'rowString'));
+    }
+
+    function numberToLetter($number) {
+        if ($number < 1) {
+            return "Invalid number";
+        }
+        $alphabet = range('A', 'Z');
+        $letterCount = count($alphabet);
+        
+        $result = "";
+        while ($number > 0) {
+            $remainder = ($number - 1) % $letterCount;
+            $result = $alphabet[$remainder] . $result;
+            $number = floor(($number - 1) / $letterCount);
+        }
+        return $result;
+    }
+
+    function convertDateTimeToLocalFormat($dateTimeString) {
+        $dateTime = new DateTime($dateTimeString);
+        $day = str_pad($dateTime->format('d'), 2, '0', STR_PAD_LEFT);
+        $month = str_pad($dateTime->format('m'), 2, '0', STR_PAD_LEFT);
+        $year = $dateTime->format('Y');
+        $hours = str_pad($dateTime->format('H'), 2, '0', STR_PAD_LEFT);
+        $minutes = str_pad($dateTime->format('i'), 2, '0', STR_PAD_LEFT);
+        $monthName = $dateTime->format('F');
+
+        $formattedDateTime = "$day $monthName $year, $hours:$minutes";
+
+        return $formattedDateTime;
     }
 }

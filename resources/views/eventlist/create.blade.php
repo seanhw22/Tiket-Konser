@@ -14,6 +14,14 @@
                     <input type="text" class="form-control" id="event_desc" name="event_desc"> 
                 </div>
                 <div class="mb-3">
+                    <label for="event_image" class="form-label">Event Image</label>
+                    <input type="text" class="form-control" id="event_image" name="event_image">
+                </div>
+                <div class="mb-3">
+                    <label for="event_date">Event Date</label>
+                    <input type="datetime-local" id="event_date" name="event_date">
+                </div>
+                <div class="mb-3">
                     <label for="total_seat_columns" class="form-label">Total Seat Columns</label>
                     <input type="text" class="form-control" id="total_seat_columns" name="total_seat_columns">
                 </div>

@@ -15,6 +15,15 @@
                     <input type="text" class="form-control" id="event_desc" name="event_desc" value="{{ $event->event_desc }}"> 
                 </div>
                 <div class="mb-3">
+                    <label for="event_image" class="form-label">Event Image</label>
+                    <input type="text" class="form-control" id="event_image" name="event_image" value="{{ $event->event_image }}">
+                    <img src="{{ $event->event_image }}" alt="" width="750" height="750">
+                </div>
+                <div class="mb-3">
+                    <label for="event_date">Event Date</label>
+                    <input type="datetime-local" id="event_date" name="event_date" value="{{ $event->event_date }}">
+                </div>
+                <div class="mb-3">
                     <label for="total_seat_columns" class="form-label">Total Seat Columns</label>
                     <input type="text" class="form-control" id="total_seat_columns" name="total_seat_columns" value="{{ $event->total_seat_columns }}">
                 </div>

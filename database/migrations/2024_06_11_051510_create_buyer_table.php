@@ -18,7 +18,7 @@ return new class extends Migration
             $table->string('email');
             $table->string('phone');
             $table->unsignedBigInteger('event_id');
-            $table->jsonb('seat_id_array');
+            $table->unsignedBigInteger('seat_id');
             $table->foreign('event_id')->references('id')->on('event')->onDelete('cascade');
         });
     }

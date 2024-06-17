@@ -35,6 +35,11 @@ class SeatClassController extends Controller
         return $seatClassArray;
     }
 
+    public function retrieveOne($id){
+        $seatClass = SeatClass::find($id);
+        return $seatClass;
+    }
+
     public function update(Request $request, $event_id){
         $seatClassIdsInRequest = array_column($request->seatclass, 'id');
         $seatClassIdsInDatabase = SeatClass::where('event_id', $event_id)->pluck('id')->toArray();

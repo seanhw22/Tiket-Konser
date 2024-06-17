@@ -14,7 +14,7 @@ class Buyer extends Model
         'email',
         'phone',
         'event_id',
-        'seat_id_array'
+        'seat_id',
     ];
 
     protected $casts = [

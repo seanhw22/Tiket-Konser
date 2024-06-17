@@ -23,7 +23,12 @@ class SeatController extends Controller
         return $seatsArray;
     }
 
-    public function destroyAll($event_id){
+    public function retrieveOne($seat_id){
+        $seat = Seat::find($seat_id);
+        return $seat;
+    }
+
+    public function destroyAllInEvent($event_id){
         Seat::where('event_id', $event_id)->delete();
     }
 }
