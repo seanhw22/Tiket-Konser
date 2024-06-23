@@ -40,6 +40,11 @@ class SeatClassController extends Controller
         return $seatClass;
     }
 
+    public function retrieveAll(){
+        $seatClasses = SeatClass::all();
+        return $seatClasses;
+    }
+
     public function update(Request $request, $event_id){
         $seatClassIdsInRequest = array_column($request->seatclass, 'id');
         $seatClassIdsInDatabase = SeatClass::where('event_id', $event_id)->pluck('id')->toArray();

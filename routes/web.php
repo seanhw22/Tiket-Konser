@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\EventController;
+use App\Http\Controllers\BuyerController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -19,7 +20,7 @@ Route::get('/', function () {
     return view('index');
 });
 
-Route::get('/dashboard', function () {
+Route::get('/admin', function () {
     return view('dashboard');
 })->middleware(['auth', 'verified'])->name('dashboard');
 
@@ -42,6 +43,12 @@ Route::middleware('auth')->group(function () {
     Route::get('/event-list/{id}/seat/{seat_id}', [EventController::class, 'seatDetails'])->name('eventlist.seatdetails');
 });
 
+Route::get('buyer-list', [BuyerController::class, 'index'])->middleware(['auth', 'verified'])->name('buyerlist');
+Route::middleware('auth')->group(function () {
+    Route::get('/buyer-list/edit/{id}', [BuyerController::class, 'edit'])->name('buyerlist.edit');
+    Route::put('/buyer-list/update/{id}', [BuyerController::class, 'update'])->name('buyerlist.update');
+    Route::delete('/buyer-list/destroy/{id}', [BuyerController::class, 'destroy'])->name('buyerlist.destroy');
+});
 require __DIR__.'/auth.php';
 
 Route::get('/index', function(){

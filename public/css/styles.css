@@ -207,6 +207,20 @@ p {
     opacity: 0.5;
 }
 
+.form-label {
+    color: black;
+}
+
+.container-edit{
+  max-width: 1200px;
+  margin: 0 auto;
+  color:black;
+}
+
+.container-edit h2{
+  font-size: 36px;
+}
+
 input::-webkit-outer-spin-button,
 input::-webkit-inner-spin-button {
     /* display: none; <- Crashes Chrome on hover */

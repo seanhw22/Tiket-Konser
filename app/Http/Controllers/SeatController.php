@@ -28,9 +28,20 @@ class SeatController extends Controller
         return $seat;
     }
 
+    public function retrieveAll(){
+        $seats = Seat::all()->toArray();
+        return $seats;
+    }
+
     public function updateAvailability($seat_id){
         $seat = Seat::find($seat_id);
         $seat->available = !$seat->available;
+        $seat->save();
+    }
+
+    public function makeSeatAvailable($seat_id){
+        $seat = Seat::find($seat_id);
+        $seat->available = true;
         $seat->save();
     }
 

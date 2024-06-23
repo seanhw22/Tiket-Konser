@@ -1,5 +1,4 @@
-@extends('layouts.template')
-@section('content')
+<x-app-layout>
     <section class="page-section portfolio" id="tambah">
         <div class="container">
             <h1>Tambah Data Event</h1>
@@ -18,27 +17,29 @@
                     <input type="text" class="form-control" id="event_image" name="event_image">
                 </div>
                 <div class="mb-3">
-                    <label for="event_date">Event Date</label>
-                    <input type="datetime-local" id="event_date" name="event_date">
+                    <label for="event_date" class="form-label">Event Date : </label>
+                    <input type="datetime-local" class="form-control" id="event_date" name="event_date">
                 </div>
                 <div class="mb-3">
                     <label for="total_seat_columns" class="form-label">Total Seat Columns</label>
                     <input type="text" class="form-control" id="total_seat_columns" name="total_seat_columns">
                 </div>
                 <div>
-                    <label for="end_date">End Date</label>
-                    <input type="datetime-local" id="end_date" name="end_date">
+                    <label for="end_date" class="form-label">End Date : </label>
+                    <input type="datetime-local" class="form-control" id="end_date" name="end_date">
                 </div>
-                <div>
-                    <div id="seatClasses">
-                        <label for="seatclass">Seat Class:</label>
-                        <input type="text" name="seatclass[0][seat_class]" placeholder="Seat Class">
-                        <input type="number" name="seatclass[0][price]" placeholder="Price">
-                        <input type="number" name="seatclass[0][total_seat_rows]" placeholder="Total Seat Rows">
-                        <input type="string" name="seatclass[0][color_code]" placeholder="Color Code">
-                        <button type="button" onclick="addSeatClass()">Add Seat Class</button>
+                <br>
+                <div id="seatClasses">
+                    <div>
+                        <label for="seatclass" class="form-label">Seat Class:</label>
+                        <input type="text" class="form-label"name="seatclass[0][seat_class]" placeholder="Seat Class">
+                        <input type="number" class="form-label" name="seatclass[0][price]" placeholder="Price">
+                        <input type="number" class="form-label" name="seatclass[0][total_seat_rows]" placeholder="Total Seat Rows">
+                        <input type="text" class="form-label" name="seatclass[0][color_code]" placeholder="Color Code">
+                        <button type="button" class="btn btn-dark" onclick="addSeatClass()">Add Seat Class</button>
                     </div>
                 </div>
+                <br>
                 <button type="submit" class="btn btn-primary">Submit</button>
                 <a href="{{ route('eventlist') }}" class="btn btn-primary">Back</a> 
             </form>
@@ -50,12 +51,14 @@
             index++;
             const seatClassDiv = document.createElement('div');
             seatClassDiv.innerHTML = `
-                <label for="seatclass">Seat Class:</label>
-                <input type="text" name="seatclass[${index}][seat_class]" placeholder="Seat Class">
-                <input type="number" name="seatclass[${index}][price]" placeholder="Price">
-                <input type="number" name="seatclass[${index}][total_seat_rows]" placeholder="Total Seat Rows">
-                <input type="string" name="seatclass[${index}][color_code]" placeholder="Color Code">
-                <button type="button" onclick="removeSeatClass(this)">Remove Seat Class</button>
+                <div>
+                <label for="seatclass" class="form-label">Seat Class:</label>
+                <input type="text" class="form-label" name="seatclass[${index}][seat_class]" placeholder="Seat Class">
+                <input type="number" class="form-label" name="seatclass[${index}][price]" placeholder="Price">
+                <input type="number" class="form-label" name="seatclass[${index}][total_seat_rows]" placeholder="Total Seat Rows">
+                <input type="text" class="form-label" name="seatclass[${index}][color_code]" placeholder="Color Code">
+                <button type="button" class="btn btn-dark" onclick="removeSeatClass(this)">Remove Seat Class</button>
+                <div>
             `;
             document.getElementById('seatClasses').appendChild(seatClassDiv);
         }
@@ -65,4 +68,4 @@
             index--;
         }
     </script>
-@endsection
+</x-app-layout>

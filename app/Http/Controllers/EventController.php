@@ -23,6 +23,9 @@ class EventController extends Controller
     }
     
     public function store(Request $request){
+        $request->seatclass = array_filter($request->seatclass, function ($value) {
+            return !is_null($value);
+        });
         $request->validate([
             'event_name' => 'required',
             'event_desc' => 'required',
@@ -54,8 +57,22 @@ class EventController extends Controller
             ->with('success',"Event created successfully, don't forget to create seats before deploying and after editing.");
     }
 
+    public function retrieveAll(){
+        $events = Event::all();
+        return $events;
+    }
+
+    public function retrieveOne($id){
+        $event = Event::find($id);
+        return $event;
+    }
+
     public function edit($id){
         $event = Event::find($id);
+        if ($event == null){
+            return redirect()->route('eventlist')
+                ->with('failure','Event does not exist.');
+        }
         $seatClassController = new SeatClassController();
         $seatclass = $seatClassController->retrieve($id);
         $seatclassstring = json_encode($seatclass);
@@ -68,6 +85,18 @@ class EventController extends Controller
     }
 
     public function update(Request $request, $id){
+        $request->seatclass = array_filter($request->seatclass, function ($value) {
+            return !is_null($value);
+        });
+        $event = Event::find($id);
+        if ($event == null){
+            return redirect()->route('eventlist')
+                ->with('failure','Event does not exist.');
+        }
+        if ($event->deployed == true){
+            return redirect()->route('eventlist')
+                ->with('failure','Event already deployed, cannot edit an event that has been deployed.');
+        }
         $request->validate([
             'event_name' => 'required',
             'event_desc' => 'required',
@@ -103,6 +132,14 @@ class EventController extends Controller
 
     public function destroy($id){
         $event = Event::find($id);
+        if ($event == null){
+            return redirect()->route('eventlist')
+                ->with('failure','Event does not exist.');
+        }
+        if ($event->deployed == true){
+            return redirect()->route('eventlist')
+                ->with('failure','Event already deployed, cannot delete an event that has been deployed.');
+        }
         $seatClassController = new SeatClassController();
         $seatClasses = $seatClassController->retrieve($id);
         foreach ($seatClasses as $seatClass) {
@@ -114,6 +151,14 @@ class EventController extends Controller
     }
 
     public function createSeats($id){
+        if (Event::find($id) == null){
+            return redirect()->route('eventlist')
+                ->with('failure','Event does not exist.');
+        }
+        if (Event::find($id)->deployed == true){
+            return redirect()->route('eventlist')
+                ->with('failure','Event already deployed, cannot create seats for an event that has been deployed.');
+        }
         $seatClassController = new SeatClassController();
         $seatController = new SeatController();
         $seatController->destroyAllInEvent($id);
@@ -150,6 +195,14 @@ class EventController extends Controller
     public function deploy($id){
         $seatController = new SeatController();
         $event = Event::find($id);
+        if ($event == null){
+            return redirect()->route('eventlist')
+                ->with('failure','Event does not exist.');
+        }
+        if ($event->deployed == true){
+            return redirect()->route('eventlist')
+                ->with('failure','Event already deployed, cannot deploy an event that has been deployed.');
+        }
         $seats = $seatController->retrieve($id);
         if (empty($seats)){
             return redirect()->route('eventlist')
@@ -165,11 +218,13 @@ class EventController extends Controller
     public function seatDetails($eventId, $seatId){
         $seatController = new SeatController();
         $seatClassController = new SeatClassController();
+        $buyerController = new BuyerController();
         $seat = $seatController->retrieveOne($seatId);
         $seatClass = $seatClassController->retrieveOne($seat->seat_class_id);
         $event = Event::find($eventId);
         $rowString = EventController::numberToLetter($seat->seat_position_row);
-        return view('eventlist.seat', compact('seat', 'seatClass', 'event', 'rowString'));
+        $buyer = $buyerController->retrieve($seatId);
+        return view('eventlist.seat', compact('seat', 'seatClass', 'event', 'rowString', 'buyer'));
     }
 
     public function retrieveDeployed(){

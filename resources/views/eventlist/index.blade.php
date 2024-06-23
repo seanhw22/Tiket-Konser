@@ -1,5 +1,4 @@
-@extends('layouts.template')
-@section('content')
+<x-app-layout>
     <section class="page-section portfolio" id="portfolio">
         <div class="container">
             <h1>Event List</h1>
@@ -16,7 +15,7 @@
                     <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                 </div>
             @endif
-            <table class="table table-dark">
+            <table class="table">
                 <thead>
                     <tr>
                         <th scope="col">#</th>
@@ -26,9 +25,12 @@
                     </tr>
                 </thead>
                 <tbody>
+                    @php
+                        $index = 1;
+                    @endphp
                     @foreach ($event as $e)
                         <tr>
-                            <td>{{ $e ->id }}</td>
+                            <td>{{ $index }}</td>
                             <td>{{ $e ->event_name}}</td>
                             <td>{{ $e ->event_desc }}</td>
 
@@ -36,26 +38,29 @@
                                 <a href="{{ route('eventlist.showdetails', $e->id) }}" class="btn btn-primary">Details</a>
                                 @if (!$e->deployed)
                                     <a href="{{ route('eventlist.edit', $e->id) }}" class="btn btn-warning">Edit</a>
-                                    <form action="{{ route('eventlist.destroy', $e->id) }}" method="POST" class="d-inline">
-                                        @method('delete')
+                                    <form action="{{ route('eventlist.createseats', $e->id) }}" method="POST" class="d-inline">
                                         @csrf
-                                        <button type="submit" class="btn btn-danger" onclick="return confirm('Are you sure you wish to delete this?');">Delete</button>
+                                        <button type="submit" class="btn btn-primary">Create Seat</button>
                                     </form>
                                     <form action="{{ route('eventlist.deploy', $e->id) }}" method="POST" class="d-inline">
                                         @csrf
                                         @method('PUT')
                                         <button type="submit" class="btn btn-warning" onclick="return confirm('Are you sure you wish to deploy this? You cannot undo this action.');">Deploy</button>
                                     </form>
-                                    <form action="{{ route('eventlist.createseats', $e->id) }}" method="POST" class="d-inline">
+                                    <form action="{{ route('eventlist.destroy', $e->id) }}" method="POST" class="d-inline">
+                                        @method('delete')
                                         @csrf
-                                        <button type="submit" class="btn btn-primary">Create Seat</button>
+                                        <button type="submit" class="btn btn-danger" onclick="return confirm('Are you sure you wish to delete this?');">Delete</button>
                                     </form>
                                 @endif
                             </td>
                         </tr>
+                        @php
+                            $index++;
+                        @endphp
                     @endforeach
                 </tbody>
             </table>
         </div>
     </section>
-@endsection
+</x-app-layout>
