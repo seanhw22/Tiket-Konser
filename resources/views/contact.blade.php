@@ -16,7 +16,8 @@ PSUT ConcertTickets
                     <div class="white-box">
                         
                         <h2>Have any questions or suggestions? Fill out the form below to get in touch with us.</h2>
-                        <form id="contact-form" method="post" enctype="multipart/form-data">
+                        <form id="contact-form" action="{{ route('contact.send') }}" method="POST">
+                            @csrf
                             <div class="form-group">
                                 <label for="name">Name</label>
                                 <input type="text" id="name" name="name" class="form-control" required>
@@ -27,15 +28,11 @@ PSUT ConcertTickets
                             </div>
                             <div class="form-group">
                                 <label for="phone">Phone Number</label>
-                                <input type="tel" id="phone" name="phone" class="form-control">
+                                <input type="number" class="form-control" id="phone" name="phone" min="0" required>
                             </div>
                             <div class="form-group">
                                 <label for="message">Message</label>
                                 <textarea id="message" name="message" rows="4" class="form-control" required></textarea>
-                            </div>
-                            <div class="form-group">
-                                <label for="image">Upload Image</label>
-                                <input type="file" id="image" name="image" class="form-control-file">
                             </div>
                             <button type="submit" class="btn btn-primary">Send Message</button>
                         </form>

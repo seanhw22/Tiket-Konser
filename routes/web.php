@@ -3,6 +3,7 @@
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\EventController;
 use App\Http\Controllers\BuyerController;
+use App\Http\Controllers\SuggestionController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -49,6 +50,17 @@ Route::middleware('auth')->group(function () {
     Route::put('/buyer-list/update/{id}', [BuyerController::class, 'update'])->name('buyerlist.update');
     Route::delete('/buyer-list/destroy/{id}', [BuyerController::class, 'destroy'])->name('buyerlist.destroy');
 });
+
+Route::middleware('auth')->group(function () {
+    Route::get('suggestion-list', [SuggestionController::class, 'index'])->name('suggestionlist');
+    Route::get('suggestion-list/{id}', [SuggestionController::class, 'showDetails'])->name('suggestionlist.details');
+    Route::post('suggestion-list/pin/{id}', [SuggestionController::class, 'pinSuggestion'])->name('suggestionlist.pin');
+    Route::post('suggestion-list/check/{id}', [SuggestionController::class, 'checkSuggestion'])->name('suggestionlist.check');
+    Route::post('suggestion-list/unpin/{id}', [SuggestionController::class, 'unpinSuggestion'])->name('suggestionlist.unpin');
+    Route::post('suggestion-list/uncheck/{id}', [SuggestionController::class, 'uncheckSuggestion'])->name('suggestionlist.uncheck');
+    Route::delete('suggestion-list/destroy/{id}', [SuggestionController::class, 'destroy'])->name('suggestionlist.destroy');
+});
+
 require __DIR__.'/auth.php';
 
 Route::get('/index', function(){
@@ -61,9 +73,9 @@ Route::get('/event/{id}/seat/{seat_id}', [EventController::class, 'seatDetailsDe
 Route::post('/event/{id}/seat/{seat_id}/buy', [EventController::class, 'buyTicket'])->name('event.buy');
 Route::get('/event/{event_id}/seat/{seat_id}/confirmed', [EventController::class, 'showConfirmed'])->name('event.confirmed');
 
-Route::get('/contact', function(){
-    return view('contact');
-})->name('contact');
+Route::get('/contact', [SuggestionController::class, 'contact'])->name('contact');
+Route::post('/contact/send', [SuggestionController::class, 'store'])->name('contact.send');
+
 Route::get('/about', function(){
     return view('about');
 })->name('about');
