@@ -33,6 +33,10 @@ Route::middleware('auth')->group(function () {
 
 Route::get('/event-list', [EventController::class, 'index'])->middleware(['auth', 'verified'])->name('eventlist');
 Route::middleware('auth')->group(function () {
+    Route::get('/event-list/search', [EventController::class, 'search'])->name('eventlist.search');
+    Route::get('/event-list/sort-asc', [EventController::class, 'sortAsc'])->name('eventlist.sortasc');
+    Route::get('/event-list/sort-desc', [EventController::class, 'sortDesc'])->name('eventlist.sortdesc');
+    Route::get('/event-list/retrieve-deployed', [EventController::class, 'retrieveDeployedAdmin'])->name('eventlist.retrievedeployed');
     Route::get('/event-list/create', [EventController::class, 'create'])->name('eventlist.create');
     Route::get('/event-list/{id}', [EventController::class, 'showDetails'])->name('eventlist.showdetails');
     Route::get('/event-list/edit/{id}', [EventController::class, 'edit'])->name('eventlist.edit');
@@ -46,6 +50,9 @@ Route::middleware('auth')->group(function () {
 
 Route::get('buyer-list', [BuyerController::class, 'index'])->middleware(['auth', 'verified'])->name('buyerlist');
 Route::middleware('auth')->group(function () {
+    Route::get('/buyer-list/search', [BuyerController::class, 'search'])->name('buyerlist.search');
+    Route::get('/buyer-list/sort-asc', [BuyerController::class, 'sortAsc'])->name('buyerlist.sortasc');
+    Route::get('/buyer-list/sort-desc', [BuyerController::class, 'sortDesc'])->name('buyerlist.sortdesc');
     Route::get('/buyer-list/edit/{id}', [BuyerController::class, 'edit'])->name('buyerlist.edit');
     Route::put('/buyer-list/update/{id}', [BuyerController::class, 'update'])->name('buyerlist.update');
     Route::delete('/buyer-list/destroy/{id}', [BuyerController::class, 'destroy'])->name('buyerlist.destroy');
@@ -53,6 +60,11 @@ Route::middleware('auth')->group(function () {
 
 Route::middleware('auth')->group(function () {
     Route::get('suggestion-list', [SuggestionController::class, 'index'])->name('suggestionlist');
+    Route::get('suggestion-list/search', [SuggestionController::class, 'search'])->name('suggestionlist.search');
+    Route::get('suggestion-list/sort-asc', [SuggestionController::class, 'sortAsc'])->name('suggestionlist.sortasc');
+    Route::get('suggestion-list/sort-desc', [SuggestionController::class, 'sortDesc'])->name('suggestionlist.sortdesc');
+    Route::get('suggestion-list/retrieve-pinned', [SuggestionController::class, 'retrievePinned'])->name('suggestionlist.retrievepinned');
+    Route::get('suggestion-list/retrieve-checked', [SuggestionController::class, 'retrieveChecked'])->name('suggestionlist.retrievechecked');
     Route::get('suggestion-list/{id}', [SuggestionController::class, 'showDetails'])->name('suggestionlist.details');
     Route::post('suggestion-list/pin/{id}', [SuggestionController::class, 'pinSuggestion'])->name('suggestionlist.pin');
     Route::post('suggestion-list/check/{id}', [SuggestionController::class, 'checkSuggestion'])->name('suggestionlist.check');

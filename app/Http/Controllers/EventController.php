@@ -14,9 +14,69 @@ class EventController extends Controller
     public function index()
     {
         $event = Event::all();
-        return view('eventlist.index', compact('event'));
+        $search ='';
+        $deployed = 0;
+        return view('eventlist.index', compact('event', 'search', 'deployed'));
     }
 
+    public function search(Request $request){
+        $search = $request->search;
+        $deployed = $request->deployed;
+        if ($search === '') {
+            return redirect()->route('eventlist');
+        }
+        $event = Event::where('event_name', 'like', '%' . $request->search . '%')
+            ->orWhere('event_desc', 'like', '%' . $request->search . '%')
+            ->get();
+        if ($event->isEmpty()) {
+            return redirect()->route('eventlist')
+                ->with('failure','Event does not exist.');
+        }
+        return view('eventlist.index', compact('event', 'search', 'deployed'));
+    }
+
+    public function sortAsc(Request $request)
+    {
+        $search = $request->search;
+        $deployed = $request->deployed;
+        $event = Event::where('event_name', 'like', '%' . $search . '%')
+            ->orWhere('event_desc', 'like', '%' . $search . '%')
+            ->orderBy('event_name', 'asc')->get();
+        return view('eventlist.index', compact('event', 'search', 'deployed'));
+    }
+    public function sortDesc(Request $request)
+    {
+        $search = $request->search;
+        $deployed = $request->deployed;
+        $event = Event::where('event_name', 'like', '%' . $search . '%')
+            ->orWhere('event_desc', 'like', '%' . $search . '%')
+            ->orderBy('event_name', 'desc')->get();
+        return view('eventlist.index', compact('event', 'search', 'deployed'));
+    }
+
+    public function retrieveDeployedAdmin(Request $request){
+        $search = $request->search;
+        $deployed = $request->deployed;
+        if ($deployed == 0) {
+            $deployed = 1;
+            $event = Event::where(function ($query) use ($search) {
+            $query->where('event_name', 'like', '%' . $search . '%')
+                ->orWhere('event_desc', 'like', '%' . $search . '%');
+            })
+            ->where('deployed', true)
+            ->get();
+        }
+        else if ($deployed == 1) {
+            $deployed = 0;
+            $event = Event::where(function ($query) use ($search) {
+            $query->where('event_name', 'like', '%' . $search . '%')
+                    ->orWhere('event_desc', 'like', '%' . $search . '%');
+            })
+            ->where('deployed', false)
+            ->get();
+        }
+        return view('eventlist.index', compact('event', 'search', 'deployed'));
+    }
     public function create()
     {
         return view("eventlist.create");

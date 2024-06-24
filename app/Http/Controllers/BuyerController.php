@@ -18,7 +18,63 @@ class BuyerController extends Controller
         for ($i = 0; $i < count($seats); $i++) {
             $seats[$i]['seat_position_row'] = $this->numberToLetter($seats[$i]['seat_position_row']);
         }
-        return view('buyerlist.index', compact('buyers', 'events', 'seatClasses', 'seats'));
+        $search = '';
+        return view('buyerlist.index', compact('buyers', 'events', 'seatClasses', 'seats', 'search'));
+    }
+
+    public function search(Request $request){
+        $eventController = new EventController();
+        $seatClassController = new SeatClassController();
+        $seatController = new SeatController();
+        $search = $request->search;
+        $events = $eventController->retrieveAll();
+        $seatClasses = $seatClassController->retrieveAll();
+        $seats = $seatController->retrieveAll();
+        if ($search === '') {
+            return redirect()->route('buyerlist');
+        }
+        $buyers = Buyer::where('name', 'like', '%' . $search . '%')->get();
+        if ($buyers->isEmpty()) {
+            return redirect()->route('buyerlist')
+                ->with('failure','Event does not exist.');
+        }
+        return view('buyerlist.index', compact('buyers', 'events', 'seatClasses', 'seats', 'search'));
+    }
+
+    public function sortAsc(Request $request)
+    {
+        $search = $request->search;
+        $eventController = new EventController();
+        $seatClassController = new SeatClassController();
+        $seatController = new SeatController();
+        $buyers = Buyer::all();
+        $events = $eventController->retrieveAll();
+        $seatClasses = $seatClassController->retrieveAll();
+        $seats = $seatController->retrieveAll();
+        for ($i = 0; $i < count($seats); $i++) {
+            $seats[$i]['seat_position_row'] = $this->numberToLetter($seats[$i]['seat_position_row']);
+        }
+        $buyers = Buyer::where('name', 'like', '%' . $search . '%')
+            ->orderBy('name', 'asc')->orderBy('email', 'asc')->get();
+        return view('buyerlist.index', compact('buyers', 'events', 'seatClasses', 'seats', 'search'));
+    }
+
+    public function sortDesc(Request $request)
+    {
+        $search = $request->search;
+        $eventController = new EventController();
+        $seatClassController = new SeatClassController();
+        $seatController = new SeatController();
+        $buyers = Buyer::all();
+        $events = $eventController->retrieveAll();
+        $seatClasses = $seatClassController->retrieveAll();
+        $seats = $seatController->retrieveAll();
+        for ($i = 0; $i < count($seats); $i++) {
+            $seats[$i]['seat_position_row'] = $this->numberToLetter($seats[$i]['seat_position_row']);
+        }
+        $buyers = Buyer::where('name', 'like', '%' . $search . '%')
+            ->orderBy('name', 'desc')->orderBy('email', 'desc')->get();
+        return view('buyerlist.index', compact('buyers', 'events', 'seatClasses', 'seats', 'search'));
     }
     public function store(Request $request){
         $request->validate([
