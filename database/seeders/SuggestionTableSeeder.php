@@ -26,7 +26,7 @@ class SuggestionTableSeeder extends Seeder
                 'updated_at' => '2024-06-25 14:00:35',
                 'name' => 'Sean',
                 'email' => 'sean.535220019@stu.untar.ac.id',
-                'phone' => '081519791003',
+                'phone' => '08111111111',
                 'message' => 'Website ok yooo',
                 'checked' => true,
                 'pinned' => true,

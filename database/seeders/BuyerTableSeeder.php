@@ -26,7 +26,7 @@ class BuyerTableSeeder extends Seeder
                 'updated_at' => '2024-06-25 13:59:19',
                 'name' => 'Sean Henry Wijaya',
                 'email' => 'sean.535220019@stu.untar.ac.id',
-                'phone' => '081519791003',
+                'phone' => '081111111111',
                 'event_id' => 1,
                 'seat_id' => 1210,
             ),
