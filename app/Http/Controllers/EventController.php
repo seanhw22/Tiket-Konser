@@ -327,7 +327,7 @@ class EventController extends Controller
                 ->with('error',"Event isn't live.");
         }
         if(!$seat->available){
-            return redirect()->route('event.seat', [$eventId, $seatId])
+            return redirect()->route('event.showdeployed', [$eventId, $seatId])
                 ->with('error',"Seat isn't available.");
         }
         $rowString = EventController::numberToLetter($seat->seat_position_row);
