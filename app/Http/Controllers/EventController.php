@@ -141,10 +141,20 @@ class EventController extends Controller
         $seatclassstring = json_encode($seatclass);
         if ($event->deployed == true){
             return redirect()->route('eventlist')
-                ->with('failure','Event already deployed, cannot edit an event that has been deployed.');
+                ->with('failure','Event already deployed, use another edit link.');
         }
 
         return view('eventlist.edit', compact('event', 'seatclass', 'seatclassstring'));
+    }
+
+    public function editAfterDeployed($id){
+        $event = Event::find($id);
+        if ($event == null){
+            return redirect()->route('eventlist')
+                ->with('failure','Event does not exist.');
+        }
+        $event->event_desc = EventController::remove_br($event->event_desc);
+        return view('eventlist.edit-deployed', compact('event'));
     }
 
     public function update(Request $request, $id){
@@ -158,7 +168,7 @@ class EventController extends Controller
         }
         if ($event->deployed == true){
             return redirect()->route('eventlist')
-                ->with('failure','Event already deployed, cannot edit an event that has been deployed.');
+                ->with('failure','Event already deployed, use another edit link.');
         }
         $request->validate([
             'event_name' => 'required',
@@ -193,6 +203,34 @@ class EventController extends Controller
         EventController::createSeats($id);
         return redirect()->route('eventlist')
             ->with('success',"Event updated successfully, don't forget to create seats before deploying and after editing.");
+    }
+
+    public function updateAfterDeployed(Request $request, $id){
+        $event = Event::find($id);
+        if ($event == null){
+            return redirect()->route('eventlist')
+                ->with('failure','Event does not exist.');
+        }
+        $request->validate([
+            'event_name' => 'required',
+            'event_desc' => 'required',
+            'event_image' => 'required',
+            'event_date' => 'required',
+            'end_date' => 'required',
+        ]);
+
+        $desc = EventController::insert_br($request->event_desc);
+
+        $update = [
+            'event_name'=> $request->event_name,
+            'event_desc'=> $desc,
+            'event_image'=> $request->event_image,
+            'event_date'=> $request->event_date,
+            'end_date'=> $request->end_date
+        ];
+        Event::whereId($id)->update($update);
+        return redirect()->route('eventlist')
+            ->with('success',"Event updated successfully.");
     }
 
     public function destroy($id){
@@ -294,7 +332,7 @@ class EventController extends Controller
 
     public function retrieveDeployed(){
         $currentDate = Carbon::now();
-        $event = Event::where('deployed', true)->where('end_date', '>=', $currentDate)->orderBy('end_date')->get();
+        $event = Event::where('deployed', true)->where('end_date', '>', $currentDate)->orderBy('end_date')->get();
         return ($event);
     }
 
@@ -314,7 +352,7 @@ class EventController extends Controller
             $query->where('event_name', 'like', '%' . $search . '%')
                 ->orWhere('event_desc', 'like', '%' . $search . '%');
             })
-            ->where('deployed', true)->where('end_date', '>=', $currentDate)->orderBy('end_date')
+            ->where('deployed', true)->where('end_date', '>', $currentDate)->orderBy('end_date')
             ->get();
         if ($event->isEmpty()) {
             return redirect()->route('event')
@@ -331,7 +369,7 @@ class EventController extends Controller
             $query->where('event_name', 'like', '%' . $search . '%')
                 ->orWhere('event_desc', 'like', '%' . $search . '%');
             })
-            ->where('deployed', true)->where('end_date', '>=', $currentDate)->orderBy('end_date')
+            ->where('deployed', true)->where('end_date', '>', $currentDate)->orderBy('end_date')
             ->orderBy('event_name', 'asc')
             ->get();
         return view('event', compact('event', 'search'));
@@ -344,7 +382,7 @@ class EventController extends Controller
             $query->where('event_name', 'like', '%' . $search . '%')
                 ->orWhere('event_desc', 'like', '%' . $search . '%');
             })
-            ->where('deployed', true)->where('end_date', '>=', $currentDate)->orderBy('end_date')
+            ->where('deployed', true)->where('end_date', '>', $currentDate)->orderBy('end_date')
             ->orderBy('event_name', 'desc')
             ->get();
         return view('event', compact('event', 'search'));
@@ -352,9 +390,14 @@ class EventController extends Controller
 
     public function showDetailsDeployed($id){
         $event = Event::find($id);
+        $currentDate = Carbon::now();
         if(!$event->deployed){
             return redirect()->route('event')
                 ->with('error',"Event isn't live.");
+        }
+        if($event->end_date < $currentDate){
+            return redirect()->route('event')
+                ->with('error',"Event has ended.");
         }
         $seatClassController = new SeatClassController();
         $seatController = new SeatController();

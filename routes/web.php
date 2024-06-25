@@ -46,6 +46,8 @@ Route::middleware('auth')->group(function () {
     Route::put('/event-list/deploy/{id}', [EventController::class, 'deploy'])->name('eventlist.deploy');
     Route::post('/event-list/create-seats/{id}', [EventController::class,'createSeats'])->name('eventlist.createseats');
     Route::get('/event-list/{id}/seat/{seat_id}', [EventController::class, 'seatDetails'])->name('eventlist.seatdetails');
+    Route::get('/event-list/edit-deployed/{id}', [EventController::class, 'editAfterDeployed'])->name('eventlist.editafterdeployed');
+    Route::put('/event-list/update-deployed/{id}', [EventController::class, 'updateAfterDeployed'])->name('eventlist.updateafterdeployed');
 });
 
 Route::get('buyer-list', [BuyerController::class, 'index'])->middleware(['auth', 'verified'])->name('buyerlist');
