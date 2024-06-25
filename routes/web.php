@@ -97,7 +97,3 @@ Route::get('/contact/confirmed', [SuggestionController::class, 'showConfirmed'])
 Route::get('/about', function(){
     return view('about');
 })->name('about');
-
-Route::get('/test', function(){ // test logged in
-    echo 'test';
-})->middleware(['auth', 'verified']);

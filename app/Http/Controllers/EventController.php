@@ -11,17 +11,21 @@ use Carbon\Carbon;
 
 class EventController extends Controller
 {
+    // admin side
+
     public function index()
     {
         $event = Event::all();
         $search ='';
         $deployed = 0;
-        return view('eventlist.index', compact('event', 'search', 'deployed'));
+        $currentDate = Carbon::now();
+        return view('eventlist.index', compact('event', 'search', 'deployed', 'currentDate'));
     }
 
     public function search(Request $request){
         $search = $request->search;
         $deployed = $request->deployed;
+        $currentDate = Carbon::now();
         if ($search === '') {
             return redirect()->route('eventlist');
         }
@@ -32,31 +36,34 @@ class EventController extends Controller
             return redirect()->route('eventlist')
                 ->with('failure','Event does not exist.');
         }
-        return view('eventlist.index', compact('event', 'search', 'deployed'));
+        return view('eventlist.index', compact('event', 'search', 'deployed', 'currentDate'));
     }
 
     public function sortAsc(Request $request)
     {
         $search = $request->search;
         $deployed = $request->deployed;
+        $currentDate = Carbon::now();
         $event = Event::where('event_name', 'like', '%' . $search . '%')
             ->orWhere('event_desc', 'like', '%' . $search . '%')
             ->orderBy('event_name', 'asc')->get();
-        return view('eventlist.index', compact('event', 'search', 'deployed'));
+        return view('eventlist.index', compact('event', 'search', 'deployed', 'currentDate'));
     }
     public function sortDesc(Request $request)
     {
         $search = $request->search;
         $deployed = $request->deployed;
+        $currentDate = Carbon::now();
         $event = Event::where('event_name', 'like', '%' . $search . '%')
             ->orWhere('event_desc', 'like', '%' . $search . '%')
             ->orderBy('event_name', 'desc')->get();
-        return view('eventlist.index', compact('event', 'search', 'deployed'));
+        return view('eventlist.index', compact('event', 'search', 'deployed', 'currentDate'));
     }
 
     public function retrieveDeployedAdmin(Request $request){
         $search = $request->search;
         $deployed = $request->deployed;
+        $currentDate = Carbon::now();
         if ($deployed == 0) {
             $deployed = 1;
             $event = Event::where(function ($query) use ($search) {
@@ -75,7 +82,7 @@ class EventController extends Controller
             ->where('deployed', false)
             ->get();
         }
-        return view('eventlist.index', compact('event', 'search', 'deployed'));
+        return view('eventlist.index', compact('event', 'search', 'deployed', 'currentDate'));
     }
     public function create()
     {
@@ -153,6 +160,10 @@ class EventController extends Controller
             return redirect()->route('eventlist')
                 ->with('failure','Event does not exist.');
         }
+        if ($event->end_date < Carbon::now() && $event->deployed == true){
+            return redirect()->route('eventlist')
+                ->with('failure','Cannot edit an event has ended.');
+        }
         $event->event_desc = EventController::remove_br($event->event_desc);
         return view('eventlist.edit-deployed', compact('event'));
     }
@@ -210,6 +221,10 @@ class EventController extends Controller
         if ($event == null){
             return redirect()->route('eventlist')
                 ->with('failure','Event does not exist.');
+        }
+        if ($event->end_date < Carbon::now() && $event->deployed == true){
+            return redirect()->route('eventlist')
+                ->with('failure','Cannot edit an event has ended.');
         }
         $request->validate([
             'event_name' => 'required',
@@ -329,6 +344,8 @@ class EventController extends Controller
         $buyer = $buyerController->retrieve($seatId);
         return view('eventlist.seat', compact('seat', 'seatClass', 'event', 'rowString', 'buyer'));
     }
+
+    // guest side
 
     public function retrieveDeployed(){
         $currentDate = Carbon::now();
@@ -457,6 +474,8 @@ class EventController extends Controller
     public function showConfirmed(){
         return view('confirmed');
     }
+
+    // functions
 
     function numberToLetter($number) {
         if ($number < 1) {

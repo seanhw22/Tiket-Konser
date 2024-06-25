@@ -97,7 +97,7 @@
                                         <button type="submit" class="btn btn-danger" onclick="return confirm('Are you sure you wish to delete this?');">Delete</button>
                                     </form>
                                 @endif
-                                @if ($e->deployed)
+                                @if ($e->deployed && $e->end_date > $currentDate)
                                     <a href="{{ route('eventlist.editafterdeployed', $e->id) }}" class="btn btn-warning">Edit</a>
                                 @endif
                             </td>
