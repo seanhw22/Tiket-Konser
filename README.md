@@ -14,7 +14,8 @@ Langkah-langkah menjalankan aplikasi web ini : <br>
 5. Run ```php artisan db:seed```.<br>
 6. Run ```npm install``` lalu ```npm run dev```.<br>
 7. Run ```php artisan serve```.<br>
-8. Buka di browser <a href="http://127.0.0.1:8000">http://127.0.0.1:8000</a>
+8. Buka di browser <a href="http://127.0.0.1:8000">http://127.0.0.1:8000</a><br>
+9. Untuk login, <a href="http://127.0.0.1:8000/admin">http://127.0.0.1:8000/admin</a> dan ini email `admin@admin` dengan password `Adm1nAdm1n`.<br>
 
 
 ## License
