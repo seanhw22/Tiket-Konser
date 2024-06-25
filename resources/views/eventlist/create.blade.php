@@ -10,7 +10,7 @@
                 </div>
                 <div class="mb-3">
                     <label for="event_desc" class="form-label">Event Description</label>
-                    <input type="text" class="form-control" id="event_desc" name="event_desc"> 
+                    <textarea class="form-control" id="event_desc" name="event_desc" rows="20"></textarea>
                 </div>
                 <div class="mb-3">
                     <label for="event_image" class="form-label">Event Image</label>

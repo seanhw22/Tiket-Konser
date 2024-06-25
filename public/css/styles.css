@@ -72,6 +72,14 @@ header {
   margin: 0 auto;
 }
 
+.details{
+  text-align: center;
+}
+
+.description{
+  text-align: start;
+}
+
 h2 {
   font-size: 36px;
 }
@@ -203,6 +211,30 @@ p {
   display: inline-block;
 }
 
+@media screen and (max-width: 1550px) {
+    .seat {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      display: inline-block;
+    }
+}
+@media screen and (max-width: 1245px) {
+    .seat {
+      width: 30px;
+      height: 30px;
+      border-radius: 50%;
+      display: inline-block;
+    }
+}
+@media screen and (max-width: 945px) {
+    .seat {
+      width: 20px;
+      height: 20px;
+      border-radius: 50%;
+      display: inline-block;
+    }
+}
 .dimmed {
     opacity: 0.5;
 }
@@ -219,6 +251,18 @@ p {
 
 .container-edit h2{
   font-size: 36px;
+}
+
+.container-seats {
+  margin: 0 auto;
+}
+
+.grey {
+  background-color: #333;
+}
+
+.rounded {
+  border-radius: 50%;
 }
 
 .alert .btn-close {

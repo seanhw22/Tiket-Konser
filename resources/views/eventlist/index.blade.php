@@ -76,7 +76,7 @@
                         <tr>
                             <td>{{ $index }}</td>
                             <td>{{ $e ->event_name}}</td>
-                            <td>{{ $e ->event_desc }}</td>
+                            <td>{{ substr($e->event_desc, 0, 50) . (strlen($e->event_desc) > 50 ? '...' : '') }}</td>
 
                             <td>
                                 <a href="{{ route('eventlist.showdetails', $e->id) }}" class="btn btn-primary">Details</a>

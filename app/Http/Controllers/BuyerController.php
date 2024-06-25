@@ -92,6 +92,10 @@ class BuyerController extends Controller
             "event_id"=> $request->event_id,
             "seat_id"=> $request->seat_id,
         ]);
+
+        $buyer_id = $buyer->id;
+
+        return $buyer_id;
     }
 
     public function retrieve($seat_id){
@@ -132,6 +136,7 @@ class BuyerController extends Controller
         $buyer = Buyer::find($id);
         $seatController = new SeatController();
         $seatController->makeSeatAvailable($buyer->seat_id);
+        $seatController->removeBuyerId($buyer->seat_id);
         $buyer->delete();
         return redirect()->route('buyerlist')
             ->with('success',"Buyer deleted successfully.");

@@ -16,7 +16,7 @@ return new class extends Migration
             $table->timestamps();
             $table->string('event_name');
             $table->longtext('event_desc');
-            $table->string('event_image');
+            $table->longtext('event_image');
             $table->dateTime('event_date');
             $table->integer('total_seat_columns');
             $table->boolean('deployed')->default(false);

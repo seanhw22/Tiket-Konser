@@ -3,7 +3,11 @@
         <div class="container-edit">
             <h2>Event Details</h2>
             <p>Event Name: {{ $event->event_name }}</p>
-            <p>Event Description: {{ $event->event_desc}}</p>
+            <br>
+            <div>
+                <p>Event Description: <?php echo htmlspecialchars_decode($event->event_desc, ENT_QUOTES); ?></p>
+            </div>
+            <br>
             <p>Event Image: <br><img src="{{$event->event_image}}"></p>
             <p>Event Date: {{ $event->event_date }}</p>
             <p>Total Seat Columns: {{ $event->total_seat_columns }}</p>
@@ -29,28 +33,30 @@
                 @endforeach
             </table>
             <br>
-            @if (!empty($seats))
-            <h2>Seats</h2>
-                <div class="container">
-                    @for ($row = 1; $row <= $total_seat_rows; $row++)
-                    <div class="row justify-content-center">
-                        @for ($column = 1; $column <= $event->total_seat_columns; $column++)
-                            @foreach ($seats as $seat)
-                                @if ($seat['seat_position_row'] === $row && $seat['seat_position_column'] === $column)
-                                    @foreach($seatClasses as $seatClass)
-                                        @if($seat['seat_class_id'] === $seatClass['id'])
-                                            <a href="{{ route('eventlist.seatdetails', [$event->id, $seat['id']]) }}">
-                                                <div class="seat @if(!$seat['available']) dimmed @endif" style="background-color: {{ $seatClass['color_code'] }}"></div>
-                                            </a>
-                                        @endif
-                                    @endforeach
-                                @endif
-                            @endforeach
-                        @endfor
-                    </div>
+        </div>
+        @if (!empty($seats))
+            <div class="container text-dark">
+                <h2 style="font-size: 36px;">Seats</h2>
+                @for ($row = 1; $row <= $total_seat_rows; $row++)
+                <div class="row justify-content-center">
+                    @for ($column = 1; $column <= $event->total_seat_columns; $column++)
+                        @foreach ($seats as $seat)
+                            @if ($seat['seat_position_row'] === $row && $seat['seat_position_column'] === $column)
+                                @foreach($seatClasses as $seatClass)
+                                    @if($seat['seat_class_id'] === $seatClass['id'])
+                                        <a href="{{ route('eventlist.seatdetails', [$event->id, $seat['id']]) }}">
+                                            <div class="seat @if(!$seat['available']) dimmed @endif" style="background-color: {{ $seatClass['color_code'] }}"></div>
+                                        </a>
+                                    @endif
+                                @endforeach
+                            @endif
+                        @endforeach
                     @endfor
                 </div>
-            @endif
+                @endfor
+            </div>
+        @endif
+        <div class="container">
             <a href="{{ route('eventlist') }}" class="btn btn-primary">Back</a> 
         </div>
     </section>

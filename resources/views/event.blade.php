@@ -58,13 +58,13 @@ PSUT ConcertTickets
                     <div class="row gx-4 gx-lg-5 row-cols-2 row-cols-md-3 row-cols-xl-4 justify-content-center">
                         @foreach ($event as $e)
                             <div class="col mb-5">
-                                <div class="card h-100">
+                                <div class="card h-100 grey rounded">
                                     <img class="card-img-top" src="{{$e->event_image}}" alt="{{$e->event_name}}">
                                     <!-- <img class="card-img-top" src="$e->event_image" alt="{{$e->event_name}}"> -->
-                                    <div class="card-footer p-4 pt-0 border-top-0 bg-transparent">
+                                    <div class="card-footer p-4 pt-0 border-top-0 bg-transparent grey">
                                         <div class="text-center">
-                                            <p class="text-dark">{{$e->event_name}}</p>
-                                            <a class="btn btn-outline-dark mt-auto" href="{{route('event.showdeployed', $e->id)}}">Show Details</a>
+                                            <p class="text-light">{{$e->event_name}}</p>
+                                            <a class="btn btn-outline-light mt-auto" href="{{route('event.showdeployed', $e->id)}}">Show Details</a>
                                         </div>
                                     </div>
                                 </div>

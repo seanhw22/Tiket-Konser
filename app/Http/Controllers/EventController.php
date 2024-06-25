@@ -100,9 +100,11 @@ class EventController extends Controller
             'seatclass.*.color_code' => 'required',
         ]);
 
+        $desc = EventController::insert_br($request->event_desc);
+
         $event = Event::create([
             "event_name"=> $request->event_name,
-            "event_desc"=> $request->event_desc,
+            "event_desc"=> $desc,
             "event_image"=> $request->event_image,
             "event_date"=> $request->event_date,
             "end_date"=> $request->end_date,
@@ -133,6 +135,7 @@ class EventController extends Controller
             return redirect()->route('eventlist')
                 ->with('failure','Event does not exist.');
         }
+        $event->event_desc = EventController::remove_br($event->event_desc);
         $seatClassController = new SeatClassController();
         $seatclass = $seatClassController->retrieve($id);
         $seatclassstring = json_encode($seatclass);
@@ -172,9 +175,11 @@ class EventController extends Controller
             'seatclass.*.color_code' => 'required',
         ]);
 
+        $desc = EventController::insert_br($request->event_desc);
+
         $update = [
             'event_name'=> $request->event_name,
-            'event_desc'=> $request->event_desc,
+            'event_desc'=> $desc,
             'event_image'=> $request->event_image,
             'event_date'=> $request->event_date,
             'total_seat_columns'=> $request->total_seat_columns,
@@ -356,7 +361,7 @@ class EventController extends Controller
         $seatClasses = $seatClassController->retrieve($id);
         $seats = $seatController->retrieve($id);
         $total_seat_rows = 0;
-        $dateTimeString = EventController::convertDateTimeToLocalFormat($event->end_date);
+        $dateTimeString = EventController::convertDateTimeToLocalFormat($event->event_date);
         foreach ($seatClasses as $seatClass) {
             $total_seat_rows += $seatClass['total_seat_rows'];
         }
@@ -400,8 +405,8 @@ class EventController extends Controller
                 ->with('error',"Seat isn't available.");
         }
         
-        $buyerController->store($request);
-        $seatController->updateAvailability($request->seat_id);
+        $buyer_id = $buyerController->store($request);
+        $seatController->updateAvailability($request->seat_id, $buyer_id);
 
         return redirect()->route('event.confirmed', [$request->event_id, $request->seat_id]);
     }
@@ -438,5 +443,15 @@ class EventController extends Controller
         $formattedDateTime = "$day $monthName $year, $hours:$minutes";
 
         return $formattedDateTime;
+    }
+    function insert_br($text)
+    {
+        $text_with_br = preg_replace('/(?:\r\n|\r|\n)/', '<br>', $text);
+        return $text_with_br;
+    }
+    function remove_br($text)
+    {
+        $text_with_line_breaks = preg_replace('/<br\s*\/?>/', "\n", $text);
+        return $text_with_line_breaks;
     }
 }

@@ -33,15 +33,22 @@ class SeatController extends Controller
         return $seats;
     }
 
-    public function updateAvailability($seat_id){
+    public function updateAvailability($seat_id, $buyer_id){
         $seat = Seat::find($seat_id);
         $seat->available = !$seat->available;
+        $seat->buyer_id = $buyer_id;
         $seat->save();
     }
 
     public function makeSeatAvailable($seat_id){
         $seat = Seat::find($seat_id);
         $seat->available = true;
+        $seat->save();
+    }
+
+    public function removeBuyerId($seat_id){
+        $seat = Seat::find($seat_id);
+        $seat->buyer_id = null;
         $seat->save();
     }
 
