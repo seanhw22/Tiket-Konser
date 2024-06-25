@@ -295,7 +295,54 @@ class EventController extends Controller
 
     public function indexDeployed(){
         $event = EventController::retrieveDeployed();
-        return view('event', compact('event'));
+        $search = '';
+        return view('event', compact('event', 'search'));
+    }
+
+    public function searchDeployed(Request $request){
+        $search = $request->search;
+        $currentDate = Carbon::now();
+        if ($search === '') {
+            return redirect()->route('eventlist');
+        }
+        $event = Event::where(function ($query) use ($search) {
+            $query->where('event_name', 'like', '%' . $search . '%')
+                ->orWhere('event_desc', 'like', '%' . $search . '%');
+            })
+            ->where('deployed', true)->where('end_date', '>=', $currentDate)->orderBy('end_date')
+            ->get();
+        if ($event->isEmpty()) {
+            return redirect()->route('event')
+                ->with('error','Event does not exist.');
+        }
+        return view('event', compact('event', 'search'));
+    }
+
+    public function sortAscDeployed(Request $request)
+    {
+        $search = $request->search;
+        $currentDate = Carbon::now();
+        $event = Event::where(function ($query) use ($search) {
+            $query->where('event_name', 'like', '%' . $search . '%')
+                ->orWhere('event_desc', 'like', '%' . $search . '%');
+            })
+            ->where('deployed', true)->where('end_date', '>=', $currentDate)->orderBy('end_date')
+            ->orderBy('event_name', 'asc')
+            ->get();
+        return view('event', compact('event', 'search'));
+    }
+    public function sortDescDeployed(Request $request)
+    {
+        $search = $request->search;
+        $currentDate = Carbon::now();
+        $event = Event::where(function ($query) use ($search) {
+            $query->where('event_name', 'like', '%' . $search . '%')
+                ->orWhere('event_desc', 'like', '%' . $search . '%');
+            })
+            ->where('deployed', true)->where('end_date', '>=', $currentDate)->orderBy('end_date')
+            ->orderBy('event_name', 'desc')
+            ->get();
+        return view('event', compact('event', 'search'));
     }
 
     public function showDetailsDeployed($id){
@@ -336,8 +383,22 @@ class EventController extends Controller
 
     public function buyTicket(Request $request){
 
+        $request->validate([
+            'name' => 'required',
+            'email' => 'required',
+            'phone' => 'required',
+            'event_id'=> 'required',
+            'seat_id'=> 'required',
+        ]);
+
         $seatController = new SeatController();
         $buyerController = new BuyerController();
+
+        $seat = $seatController->retrieveOne($request->seat_id);
+        if(!$seat->available){
+            return redirect()->route('event.showdeployed', [$request->event_id, $request->seat_id])
+                ->with('error',"Seat isn't available.");
+        }
         
         $buyerController->store($request);
         $seatController->updateAvailability($request->seat_id);

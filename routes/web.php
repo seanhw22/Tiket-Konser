@@ -80,6 +80,9 @@ Route::get('/index', function(){
 })->name('index');
 
 Route::get('/event', [EventController::class, 'indexDeployed'])->name('event');
+Route::get('/event/search', [EventController::class, 'searchDeployed'])->name('event.search');
+Route::get('/event/sort-asc', [EventController::class, 'sortAscDeployed'])->name('event.sortasc');
+Route::get('/event/sort-desc', [EventController::class, 'sortDescDeployed'])->name('event.sortdesc');
 Route::get('/event/{id}', [EventController::class, 'showDetailsDeployed'])->name('event.showdeployed');
 Route::get('/event/{id}/seat/{seat_id}', [EventController::class, 'seatDetailsDeployed'])->name('event.seatdetails');
 Route::post('/event/{id}/seat/{seat_id}/buy', [EventController::class, 'buyTicket'])->name('event.buy');
@@ -87,6 +90,7 @@ Route::get('/event/{event_id}/seat/{seat_id}/confirmed', [EventController::class
 
 Route::get('/contact', [SuggestionController::class, 'contact'])->name('contact');
 Route::post('/contact/send', [SuggestionController::class, 'store'])->name('contact.send');
+Route::get('/contact/confirmed', [SuggestionController::class, 'showConfirmed'])->name('contact.confirmed');
 
 Route::get('/about', function(){
     return view('about');

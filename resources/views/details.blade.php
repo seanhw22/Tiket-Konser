@@ -2,6 +2,12 @@
 @section('content')
     <section class="page-section portfolio" id="portfolio">
         <div class="container py-4 clearfix">
+            @if (session('error'))
+                <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                    <strong>{{ session('error') }}</strong>
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+            @endif
             <img src="{{ $event->event_image }}" class="img-fluid" width="250" height="150" alt="{{ $event->event_name }}">
             <h2>{{ $event->event_name }}</h2>
             <p>{{ $event->event_desc}}</p>

@@ -149,8 +149,11 @@ class SuggestionController extends Controller
             'message' => 'required',
         ]);
         Suggestion::create($request->all());
-        return redirect()->route('index')
-            ->with('success', 'Pesan anda telah terkirim. Terima kasih.');
+        return redirect()->route('contact.confirmed');
+    }
+
+    public function showConfirmed(){
+        return view('contact-confirmed');
     }
 
     public function showDetails($id){
