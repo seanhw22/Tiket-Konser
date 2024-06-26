@@ -202,8 +202,10 @@ class EventController extends Controller
             'total_seat_columns'=> $request->total_seat_columns,
             'end_date'=> $request->end_date
         ];
-
+        
         Event::whereId($id)->update($update);
+        $seatClassController = new SeatClassController();
+        $seatClassController->update($request, $id);
 
         return redirect()->route('eventlist')
             ->with('success',"Event updated successfully, don't forget to create seats before deploying and after editing.");
