@@ -205,9 +205,6 @@ class EventController extends Controller
 
         Event::whereId($id)->update($update);
 
-        $seatClassController = new SeatClassController();
-        $seatClassController->update($request, $id);
-        EventController::createSeats($id);
         return redirect()->route('eventlist')
             ->with('success',"Event updated successfully, don't forget to create seats before deploying and after editing.");
     }
@@ -255,10 +252,12 @@ class EventController extends Controller
                 ->with('failure','Event already deployed, cannot delete an event that has been deployed.');
         }
         $seatClassController = new SeatClassController();
+        $seatController = new SeatController();
         $seatClasses = $seatClassController->retrieve($id);
         foreach ($seatClasses as $seatClass) {
             $seatClassController->destroy($seatClass['id']);
         }
+        $seatController->destroyAllInEvent($id);
         $event->delete();
         return redirect()->route('eventlist')
             ->with('success','Event deleted successfully');
