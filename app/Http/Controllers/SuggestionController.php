@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Suggestion;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class SuggestionController extends Controller
 {
@@ -28,7 +29,7 @@ class SuggestionController extends Controller
         if ($search === '') {
             return redirect()->route('suggestionlist');
         }
-        $suggestions = Suggestion::where('name', 'like', '%' . $request->search . '%')
+        $suggestions = Suggestion::where(DB::raw('LOWER(name)'), 'like', '%' . strtolower($search) . '%')
             ->orderBy('pinned', 'desc')->orderBy('checked', 'asc')->get();
         if ($suggestions->isEmpty()) {
             return redirect()->route('suggestionlist')
@@ -42,7 +43,7 @@ class SuggestionController extends Controller
         $search = $request->search;
         $pinned = $request->pinned;
         $checked = $request->checked;
-        $suggestions = Suggestion::where('name', 'like', '%' . $search . '%')
+        $suggestions = Suggestion::where(DB::raw('LOWER(name)'), 'like', '%' . strtolower($search) . '%')
             ->orderBy('name', 'asc')->orderBy('pinned', 'desc')->orderBy('checked', 'asc')
             ->get();
         return view('suggestion.index', compact('suggestions', 'search', 'pinned', 'checked'));
@@ -52,7 +53,7 @@ class SuggestionController extends Controller
         $search = $request->search;
         $pinned = $request->pinned;
         $checked = $request->checked;
-        $suggestions = Suggestion::where('event_name', 'like', '%' . $search . '%')
+        $suggestions = Suggestion::where(DB::raw('LOWER(name)'), 'like', '%' . strtolower($search) . '%')
             ->orderBy('name', 'desc')->orderBy('pinned', 'desc')->orderBy('checked', 'asc')
             ->get();
         return view('suggestion.index', compact('suggestions', 'search', 'pinned', 'checked'));
@@ -66,14 +67,14 @@ class SuggestionController extends Controller
             $pinned = 1;
             if ($checked == 0) {
                 $suggestions = Suggestion::where(function ($query) use ($search) {
-                $query->where('name', 'like', '%' . $search . '%');
+                $query->where(DB::raw('LOWER(name)'), 'like', '%' . strtolower($search) . '%');
                 })
                 ->where('pinned', true)->where('checked', false)->orderBy('pinned', 'desc')->orderBy('checked', 'asc')
                 ->get();
             }
             else if ($checked == 1) {
                 $suggestions = Suggestion::where(function ($query) use ($search) {
-                $query->where('name', 'like', '%' . $search . '%');
+                $query->where(DB::raw('LOWER(name)'), 'like', '%' . strtolower($search) . '%');
                 })
                 ->where('pinned', true)->where('checked', true)->orderBy('pinned', 'desc')->orderBy('checked', 'asc')
                 ->get();
@@ -83,14 +84,14 @@ class SuggestionController extends Controller
             $pinned = 0;
             if ($checked == 0) {
                 $suggestions = Suggestion::where(function ($query) use ($search) {
-                $query->where('name', 'like', '%' . $search . '%');
+                $query->where(DB::raw('LOWER(name)'), 'like', '%' . strtolower($search) . '%');
                 })
                 ->where('pinned', false)->where('checked', false)->orderBy('pinned', 'desc')->orderBy('checked', 'asc')
                 ->get();
             }
             else if ($checked == 1) {
                 $suggestions = Suggestion::where(function ($query) use ($search) {
-                $query->where('name', 'like', '%' . $search . '%');
+                $query->where(DB::raw('LOWER(name)'), 'like', '%' . strtolower($search) . '%');
                 })
                 ->where('pinned', false)->where('checked', true)->orderBy('pinned', 'desc')->orderBy('checked', 'asc')
                 ->get();
@@ -107,14 +108,14 @@ class SuggestionController extends Controller
             $checked = 1;
             if ($pinned == 0) {
                 $suggestions = Suggestion::where(function ($query) use ($search) {
-                $query->where('name', 'like', '%' . $search . '%');
+                $query->where(DB::raw('LOWER(name)'), 'like', '%' . strtolower($search) . '%');
                 })
                 ->where('checked', true)->where('pinned', false)->orderBy('pinned', 'desc')->orderBy('checked', 'asc')
                 ->get();
             }
             else if ($pinned == 1) {
                 $suggestions = Suggestion::where(function ($query) use ($search) {
-                $query->where('name', 'like', '%' . $search . '%');
+                $query->where(DB::raw('LOWER(name)'), 'like', '%' . strtolower($search) . '%');
                 })
                 ->where('checked', true)->where('pinned', true)->orderBy('pinned', 'desc')->orderBy('checked', 'asc')
                 ->get();
@@ -124,14 +125,14 @@ class SuggestionController extends Controller
             $checked = 0;
             if ($pinned == 0) {
                 $suggestions = Suggestion::where(function ($query) use ($search) {
-                $query->where('name', 'like', '%' . $search . '%');
+                $query->where(DB::raw('LOWER(name)'), 'like', '%' . strtolower($search) . '%');
                 })
                 ->where('checked', false)->where('pinned', false)->orderBy('pinned', 'desc')->orderBy('checked', 'asc')
                 ->get();
             }
             else if ($pinned == 1) {
                 $suggestions = Suggestion::where(function ($query) use ($search) {
-                $query->where('name', 'like', '%' . $search . '%');
+                $query->where(DB::raw('LOWER(name)'), 'like', '%' . strtolower($search) . '%');
                 })
                 ->where('checked', false)->where('pinned', true)->orderBy('pinned', 'desc')->orderBy('checked', 'asc')
                 ->get();

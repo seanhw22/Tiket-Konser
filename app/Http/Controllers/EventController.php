@@ -8,6 +8,7 @@ use App\Http\Controllers\SeatController;
 use Illuminate\Http\Request;
 use DateTime;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\DB;
 
 class EventController extends Controller
 {
@@ -30,7 +31,6 @@ class EventController extends Controller
             return redirect()->route('eventlist');
         }
         $event = Event::where('event_name', 'like', '%' . $request->search . '%')
-            ->orWhere('event_desc', 'like', '%' . $request->search . '%')
             ->get();
         if ($event->isEmpty()) {
             return redirect()->route('eventlist')
@@ -44,8 +44,7 @@ class EventController extends Controller
         $search = $request->search;
         $deployed = $request->deployed;
         $currentDate = Carbon::now();
-        $event = Event::where('event_name', 'like', '%' . $search . '%')
-            ->orWhere('event_desc', 'like', '%' . $search . '%')
+        $event = Event::where(DB::raw('LOWER(event_name)'), 'like', '%' . strtolower($search) . '%')
             ->orderBy('event_name', 'asc')->get();
         return view('eventlist.index', compact('event', 'search', 'deployed', 'currentDate'));
     }
@@ -54,8 +53,7 @@ class EventController extends Controller
         $search = $request->search;
         $deployed = $request->deployed;
         $currentDate = Carbon::now();
-        $event = Event::where('event_name', 'like', '%' . $search . '%')
-            ->orWhere('event_desc', 'like', '%' . $search . '%')
+        $event = Event::where(DB::raw('LOWER(event_name)'), 'like', '%' . strtolower($search) . '%')
             ->orderBy('event_name', 'desc')->get();
         return view('eventlist.index', compact('event', 'search', 'deployed', 'currentDate'));
     }
@@ -67,8 +65,7 @@ class EventController extends Controller
         if ($deployed == 0) {
             $deployed = 1;
             $event = Event::where(function ($query) use ($search) {
-            $query->where('event_name', 'like', '%' . $search . '%')
-                ->orWhere('event_desc', 'like', '%' . $search . '%');
+            $query->where(DB::raw('LOWER(event_name)'), 'like', '%' . strtolower($search) . '%');
             })
             ->where('deployed', true)
             ->get();
@@ -76,8 +73,7 @@ class EventController extends Controller
         else if ($deployed == 1) {
             $deployed = 0;
             $event = Event::where(function ($query) use ($search) {
-            $query->where('event_name', 'like', '%' . $search . '%')
-                    ->orWhere('event_desc', 'like', '%' . $search . '%');
+            $query->where(DB::raw('LOWER(event_name)'), 'like', '%' . strtolower($search) . '%');
             })
             ->where('deployed', false)
             ->get();
@@ -366,8 +362,7 @@ class EventController extends Controller
             return redirect()->route('eventlist');
         }
         $event = Event::where(function ($query) use ($search) {
-            $query->where('event_name', 'like', '%' . $search . '%')
-                ->orWhere('event_desc', 'like', '%' . $search . '%');
+            $query->where(DB::raw('LOWER(event_name)'), 'like', '%' . strtolower($search) . '%');
             })
             ->where('deployed', true)->where('end_date', '>', $currentDate)->orderBy('end_date')
             ->get();
@@ -383,8 +378,7 @@ class EventController extends Controller
         $search = $request->search;
         $currentDate = Carbon::now();
         $event = Event::where(function ($query) use ($search) {
-            $query->where('event_name', 'like', '%' . $search . '%')
-                ->orWhere('event_desc', 'like', '%' . $search . '%');
+            $query->where(DB::raw('LOWER(event_name)'), 'like', '%' . strtolower($search) . '%');
             })
             ->where('deployed', true)->where('end_date', '>', $currentDate)->orderBy('end_date')
             ->orderBy('event_name', 'asc')
@@ -396,8 +390,7 @@ class EventController extends Controller
         $search = $request->search;
         $currentDate = Carbon::now();
         $event = Event::where(function ($query) use ($search) {
-            $query->where('event_name', 'like', '%' . $search . '%')
-                ->orWhere('event_desc', 'like', '%' . $search . '%');
+            $query->where(DB::raw('LOWER(event_name)'), 'like', '%' . strtolower($search) . '%');
             })
             ->where('deployed', true)->where('end_date', '>', $currentDate)->orderBy('end_date')
             ->orderBy('event_name', 'desc')

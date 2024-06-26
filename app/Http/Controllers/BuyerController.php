@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Buyer;
+use Illuminate\Support\Facades\DB;
 
 class BuyerController extends Controller
 {
@@ -33,7 +34,7 @@ class BuyerController extends Controller
         if ($search === '') {
             return redirect()->route('buyerlist');
         }
-        $buyers = Buyer::where('name', 'like', '%' . $search . '%')->get();
+        $buyers = Buyer::where(DB::raw('LOWER(name)'), 'like', '%' . strtolower($search) . '%')->get();
         if ($buyers->isEmpty()) {
             return redirect()->route('buyerlist')
                 ->with('failure','Event does not exist.');
@@ -54,7 +55,7 @@ class BuyerController extends Controller
         for ($i = 0; $i < count($seats); $i++) {
             $seats[$i]['seat_position_row'] = $this->numberToLetter($seats[$i]['seat_position_row']);
         }
-        $buyers = Buyer::where('name', 'like', '%' . $search . '%')
+        $buyers = Buyer::where(DB::raw('LOWER(name)'), 'like', '%' . strtolower($search) . '%')
             ->orderBy('name', 'asc')->orderBy('email', 'asc')->get();
         return view('buyerlist.index', compact('buyers', 'events', 'seatClasses', 'seats', 'search'));
     }
@@ -72,7 +73,7 @@ class BuyerController extends Controller
         for ($i = 0; $i < count($seats); $i++) {
             $seats[$i]['seat_position_row'] = $this->numberToLetter($seats[$i]['seat_position_row']);
         }
-        $buyers = Buyer::where('name', 'like', '%' . $search . '%')
+        $buyers = Buyer::where(DB::raw('LOWER(name)'), 'like', '%' . strtolower($search) . '%')
             ->orderBy('name', 'desc')->orderBy('email', 'desc')->get();
         return view('buyerlist.index', compact('buyers', 'events', 'seatClasses', 'seats', 'search'));
     }
