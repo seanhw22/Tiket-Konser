@@ -35,28 +35,41 @@
             <br>
         </div>
         @if (!empty($seats))
-            <div class="container text-dark">
+            @php
+                $seatsLookup = [];
+                foreach ($seats as $seat) {
+                    $seatsLookup[$seat['seat_position_row']][$seat['seat_position_column']] = $seat;
+                }
+
+                $seatClassesLookup = [];
+                foreach ($seatClasses as $seatClass) {
+                    $seatClassesLookup[$seatClass['id']] = $seatClass;
+                }
+            @endphp
+            <div class="details text-dark">
                 <h2 style="font-size: 36px;">Seats</h2>
                 @for ($row = 1; $row <= $total_seat_rows; $row++)
-                <div class="row justify-content-center">
-                    @for ($column = 1; $column <= $event->total_seat_columns; $column++)
-                        @foreach ($seats as $seat)
-                            @if ($seat['seat_position_row'] === $row && $seat['seat_position_column'] === $column)
-                                @foreach($seatClasses as $seatClass)
-                                    @if($seat['seat_class_id'] === $seatClass['id'])
-                                        <a href="{{ route('eventlist.seatdetails', [$event->id, $seat['id']]) }}">
-                                            <div class="seat @if(!$seat['available']) dimmed @endif" style="background-color: {{ $seatClass['color_code'] }}"></div>
-                                        </a>
-                                    @endif
-                                @endforeach
-                            @endif
-                        @endforeach
-                    @endfor
-                </div>
-                @endfor
+                    <div class="row justify-content-center">
+                       @for ($column = 1; $column <= $event->total_seat_columns; $column++)
+                           @php
+                               $seat = $seatsLookup[$row][$column] ?? null;
+                           @endphp
+                           @if ($seat)
+                               @php
+                                   $seatClass = $seatClassesLookup[$seat['seat_class_id']] ?? null;
+                               @endphp
+                               @if ($seatClass)
+                                   <a href="{{ route('eventlist.seatdetails', [$event->id, $seat['id']]) }}">
+                                       <div class="seat @if(!$seat['available']) dimmed @endif" style="background-color: {{ $seatClass['color_code'] }}"></div>
+                                   </a>
+                               @endif
+                           @endif
+                       @endfor
+                   </div>
+               @endfor
             </div>
         @endif
-        <div class="container">
+        <div class="details">
             <a href="{{ route('eventlist') }}" class="btn btn-primary">Back</a> 
         </div>
     </section>

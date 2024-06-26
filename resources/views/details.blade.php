@@ -41,23 +41,36 @@
             <h2>Seatmap</h2>
             <p>Click on the seat to buy tickets.</p>
             <div class="details">
+                @php
+                    $seatsLookup = [];
+                    foreach ($seats as $seat) {
+                        $seatsLookup[$seat['seat_position_row']][$seat['seat_position_column']] = $seat;
+                    }
+
+                    $seatClassesLookup = [];
+                    foreach ($seatClasses as $seatClass) {
+                        $seatClassesLookup[$seatClass['id']] = $seatClass;
+                    }
+                @endphp
                 @for ($row = 1; $row <= $total_seat_rows; $row++)
                     <div class="row justify-content-center">
-                    @for ($column = 1; $column <= $event->total_seat_columns; $column++)
-                        <div class="col-0">
-                        @foreach ($seats as $seat)
-                            @if ($seat['seat_position_row'] === $row && $seat['seat_position_column'] === $column)
-                                @foreach($seatClasses as $seatClass)
-                                    @if($seat['seat_class_id'] === $seatClass['id'])
+                        @for ($column = 1; $column <= $event->total_seat_columns; $column++)
+                            <div class="col-0">
+                                @php
+                                    $seat = $seatsLookup[$row][$column] ?? null;
+                                @endphp
+                                @if ($seat)
+                                    @php
+                                        $seatClass = $seatClassesLookup[$seat['seat_class_id']] ?? null;
+                                    @endphp
+                                    @if ($seatClass)
                                         <a @if($seat['available']) href="{{ route('event.seatdetails', [$event->id, $seat['id']]) }}" @endif>
                                             <div class="seat @if(!$seat['available']) dimmed @endif" style="background-color: {{ $seatClass['color_code'] }}"></div>
                                         </a>
                                     @endif
-                                @endforeach
-                            @endif
-                        @endforeach
-                        </div>
-                    @endfor
+                                @endif
+                            </div>
+                        @endfor
                     </div>
                 @endfor
             </div>

@@ -2,7 +2,7 @@
     <section class="page-section portfolio" id="portfolio">
         <div class="container">
             <h1>Event List</h1>
-            <a href="{{ route('eventlist.create') }}" class="btn btn-primary mb-3">Tambah Data</a>
+            <a href="{{ route('eventlist.create') }}" class="btn btn-primary mb-3">Add Events</a>
             @if (session('success'))
                 <div class="alert alert-warning alert-dismissible fade show" role="alert">
                     <strong>{{ session('success') }}</strong>
@@ -73,10 +73,22 @@
                         $index = 1;
                     @endphp
                     @foreach ($event as $e)
+                        <?php
+                            $eventDesc = htmlspecialchars_decode($e->event_desc, ENT_QUOTES);
+                            $truncatedDesc = substr($e->event_desc, 0, 50);
+
+                            $brPosition = strpos($truncatedDesc, '<br>');
+
+                            if ($brPosition !== false) {
+                                $truncatedDesc = substr($truncatedDesc, 0, $brPosition) . '...';
+                            } else {
+                                $truncatedDesc = substr($truncatedDesc, 0, 50) . '...';
+                            }
+                        ?>
                         <tr>
                             <td>{{ $index }}</td>
                             <td>{{ $e ->event_name}}</td>
-                            <td>{{ substr($e->event_desc, 0, 50) . (strlen($e->event_desc) > 50 ? '...' : '') }}</td>
+                            <td>{{ $truncatedDesc }}</td>
 
                             <td>
                                 <a href="{{ route('eventlist.showdetails', $e->id) }}" class="btn btn-primary">Details</a>

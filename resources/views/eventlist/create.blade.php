@@ -22,7 +22,7 @@
                 </div>
                 <div class="mb-3">
                     <label for="total_seat_columns" class="form-label">Total Seat Columns</label>
-                    <input type="text" class="form-control" id="total_seat_columns" name="total_seat_columns">
+                    <input type="number" class="form-control" id="total_seat_columns" name="total_seat_columns" oninput="validateInput(this)">
                 </div>
                 <div>
                     <label for="end_date" class="form-label">End Date : </label>
@@ -34,7 +34,7 @@
                         <label for="seatclass" class="form-label">Seat Class:</label>
                         <input type="text" class="form-label"name="seatclass[0][seat_class]" placeholder="Seat Class">
                         <input type="number" class="form-label" name="seatclass[0][price]" placeholder="Price">
-                        <input type="number" class="form-label" name="seatclass[0][total_seat_rows]" placeholder="Total Seat Rows">
+                        <input type="number" class="form-label form-number" name="seatclass[0][total_seat_rows]" placeholder="Total Seat Rows" oninput="validateInput(this)">
                         <input type="text" class="form-label" name="seatclass[0][color_code]" placeholder="Color Code">
                         <button type="button" class="btn btn-dark" onclick="addSeatClass()">Add Seat Class</button>
                     </div>
@@ -55,7 +55,7 @@
                 <label for="seatclass" class="form-label">Seat Class:</label>
                 <input type="text" class="form-label" name="seatclass[${index}][seat_class]" placeholder="Seat Class">
                 <input type="number" class="form-label" name="seatclass[${index}][price]" placeholder="Price">
-                <input type="number" class="form-label" name="seatclass[${index}][total_seat_rows]" placeholder="Total Seat Rows">
+                <input type="number" class="form-label form-number" name="seatclass[${index}][total_seat_rows]" placeholder="Total Seat Rows" oninput="validateInput(this)">
                 <input type="text" class="form-label" name="seatclass[${index}][color_code]" placeholder="Color Code">
                 <button type="button" class="btn btn-dark" onclick="removeSeatClass(this)">Remove Seat Class</button>
                 <div>
@@ -66,6 +66,15 @@
         function removeSeatClass(button) {
             button.parentElement.remove();
             index--;
+        }
+
+        function validateInput(input) {
+            if (input.value > 37) {
+                input.value = 37;
+            }
+            if (input.value < 0){
+                input.value = 0;
+            }
         }
     </script>
 </x-app-layout>
