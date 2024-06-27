@@ -8,7 +8,7 @@ Anggota Kelompok 14 : <br>
 Untuk menjalankan aplikasi web ini, pastikan telah terinstall Node.js, xampp versi 8.2.12 dengan php, Composer, beserta aplikasi database yang diinginkan.<br>
 Langkah-langkah menjalankan aplikasi web ini : <br>
 1. Clone repository ini.<br>
-2. Sesudah membuka folder aplikasi ini, run ```composer install```.<br>
+2. Sesudah membuka repositori ini di editor Anda, run ```composer install```.<br>
 3. Pastikan bahwa file .env telah terkonfigurasi dengan database yang diinginkan, default adalah mysql. Juga pastikan nama database yang benar. File .env.example yang ada bisa di repositori ini bisa di rename menjadi .env dan di konfigurasi bagian database connection agar memakai database yang benar.<br>
 4. Run ```php artisan migrate```.<br>
 5. Run ```php artisan db:seed```.<br>
